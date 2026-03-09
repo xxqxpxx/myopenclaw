@@ -14,7 +14,11 @@ from app.models.schemas import (
     MessageRole,
     SendMessageRequest,
 )
-from app.services.llm import route_model, stream_chat, estimate_credits, calculate_cost
+from app.services.llm import route_model, estimate_credits, calculate_cost
+from app.services.bridge import stream_agent_response
+from app.services.byok import resolve_byok_key
+from app.services.tiers import is_model_allowed
+from app.services.memory import build_memory_context
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
@@ -127,6 +131,24 @@ async def chat_stream(
     # 5. Route model
     model = route_model(body.content, body.model)
 
+    # 5a. Check tier allows this model
+    sub = await db.get_subscription(user.user_id)
+    tier_name = sub["tier"] if sub else "free"
+    if not is_model_allowed(tier_name, model):
+        raise HTTPException(
+            status_code=403,
+            detail=f"Model {model} is not available on your {tier_name} plan. Upgrade to access more models.",
+        )
+
+    # 5b. Resolve BYOK key if user has one stored
+    byok_api_key = await resolve_byok_key(user.user_id, provider="anthropic")
+
+    # 5c. Build system prompt with user memory
+    memory_ctx = await build_memory_context(user.user_id)
+    system_prompt = "You are a helpful AI assistant powered by myOpenClaw."
+    if memory_ctx:
+        system_prompt += memory_ctx
+
     # 6. Stream response
     async def event_generator():
         full_response = ""
@@ -134,7 +156,14 @@ async def chat_stream(
         total_output = 0
         credits_used = 0
 
-        async for sse_line in stream_chat(messages=messages, model=model):
+        async for sse_line in stream_agent_response(
+                user_id=user.user_id,
+                conversation_id=conversation_id,
+                messages=messages,
+                model=model,
+                system_prompt=system_prompt,
+                api_key=byok_api_key,
+            ):
             yield sse_line
 
             # Parse the done event to extract totals for post-stream bookkeeping

@@ -183,30 +183,6 @@ class IOSPreferencesManager : PreferencesManager {
         return userDefaults.boolForKey(KEY_HAS_USED_FREE_AI_CHAT)
     }
 
-    override fun saveFreeChartAnalysisDate(dateString: String) {
-        userDefaults.setObject(dateString, KEY_FREE_CHART_ANALYSIS_DATE)
-    }
-
-    override fun getFreeChartAnalysisDate(): String? {
-        return userDefaults.stringForKey(KEY_FREE_CHART_ANALYSIS_DATE)
-    }
-
-    override fun saveFreeChartAnalysisCount(count: Int) {
-        userDefaults.setInteger(count.toLong(), KEY_FREE_CHART_ANALYSIS_COUNT)
-    }
-
-    override fun getFreeChartAnalysisCount(): Int {
-        return userDefaults.integerForKey(KEY_FREE_CHART_ANALYSIS_COUNT).toInt()
-    }
-
-    override fun savePriceAlertsData(jsonData: String) {
-        userDefaults.setObject(jsonData, KEY_PRICE_ALERTS_DATA)
-    }
-
-    override fun getPriceAlertsData(): String? {
-        return userDefaults.stringForKey(KEY_PRICE_ALERTS_DATA)
-    }
-
     override fun saveUserRegistrationDate(timestamp: Long) {
         userDefaults.setObject(timestamp, KEY_USER_REGISTRATION_DATE)
     }
@@ -273,9 +249,6 @@ class IOSPreferencesManager : PreferencesManager {
         private const val KEY_WANTS_FREE_TRIAL = "wants_free_trial"
         private const val KEY_WATCHLIST_DATA = "watchlist_data"
         private const val KEY_HAS_USED_FREE_AI_CHAT = "has_used_free_ai_chat"
-        private const val KEY_FREE_CHART_ANALYSIS_DATE = "free_chart_analysis_date"
-        private const val KEY_FREE_CHART_ANALYSIS_COUNT = "free_chart_analysis_count"
-        private const val KEY_PRICE_ALERTS_DATA = "price_alerts_data"
         private const val KEY_USER_REGISTRATION_DATE = "user_registration_date"
         private const val KEY_SUBSCRIPTION_ACTIVE = "subscription_active"
         private const val KEY_SUBSCRIPTION_CHECK_TIMESTAMP = "subscription_check_timestamp"

@@ -86,6 +86,28 @@ class ApiService(
         return httpClient.get("$baseUrl/api/v1/users/me/credits").body()
     }
 
+    suspend fun getUserProfile(): UserProfileResponse {
+        return httpClient.get("$baseUrl/api/v1/users/me").body()
+    }
+
+    suspend fun updateUserProfile(request: UpdateProfileRequest): UpdateProfileResponse {
+        return httpClient.put("$baseUrl/api/v1/users/me") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
+
+    suspend fun getSubscriptionPricing(): SubscriptionPricingResponse {
+        return httpClient.get("$baseUrl/api/v1/subscription/pricing").body()
+    }
+
+    suspend fun deleteUserAccount(request: DeleteAccountRequest): DeleteAccountResponse {
+        return httpClient.delete("$baseUrl/api/v1/users/me") {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }.body()
+    }
+
     // ── Subscription (kept for RevenueCat flow) ───────────────────
 
     suspend fun getSubscription(): SubscriptionResponse {

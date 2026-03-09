@@ -85,20 +85,6 @@ interface PreferencesManager {
     fun getHasUsedFreeAIChat(): Boolean
 
     /**
-     * Chart Analysis free usage tracking (1 free per day)
-     */
-    fun saveFreeChartAnalysisDate(dateString: String)
-    fun getFreeChartAnalysisDate(): String?
-    fun saveFreeChartAnalysisCount(count: Int)
-    fun getFreeChartAnalysisCount(): Int
-
-    /**
-     * Price alerts storage (JSON)
-     */
-    fun savePriceAlertsData(jsonData: String)
-    fun getPriceAlertsData(): String?
-
-    /**
      * User registration date tracking for trial period
      */
     fun saveUserRegistrationDate(timestamp: Long)
@@ -288,30 +274,6 @@ class MockPreferencesManager : PreferencesManager {
 
     override fun getHasUsedFreeAIChat(): Boolean {
         return storage["has_used_free_ai_chat"] as? Boolean ?: false
-    }
-
-    override fun saveFreeChartAnalysisDate(dateString: String) {
-        storage["free_chart_analysis_date"] = dateString
-    }
-
-    override fun getFreeChartAnalysisDate(): String? {
-        return storage["free_chart_analysis_date"] as? String
-    }
-
-    override fun saveFreeChartAnalysisCount(count: Int) {
-        storage["free_chart_analysis_count"] = count
-    }
-
-    override fun getFreeChartAnalysisCount(): Int {
-        return storage["free_chart_analysis_count"] as? Int ?: 0
-    }
-
-    override fun savePriceAlertsData(jsonData: String) {
-        storage["price_alerts_data"] = jsonData
-    }
-
-    override fun getPriceAlertsData(): String? {
-        return storage["price_alerts_data"] as? String
     }
 
     override fun saveUserRegistrationDate(timestamp: Long) {

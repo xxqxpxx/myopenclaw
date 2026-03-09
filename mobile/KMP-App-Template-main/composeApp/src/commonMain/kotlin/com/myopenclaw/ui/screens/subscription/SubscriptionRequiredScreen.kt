@@ -141,7 +141,7 @@ fun SubscriptionRequiredScreen(
 
                 // Subtitle
                 Text(
-                    text = "Subscribe to unlock all features and continue using SignalWhisper",
+                    text = "Subscribe to unlock all features and continue using myOpenClaw",
                     fontSize = 16.sp,
                     color = Color.White.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,

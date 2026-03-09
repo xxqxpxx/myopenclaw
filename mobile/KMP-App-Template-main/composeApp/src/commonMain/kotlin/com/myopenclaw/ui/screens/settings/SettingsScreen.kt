@@ -320,7 +320,7 @@ fun SettingsScreen(
                         onClick = {
                             urlLauncher.openEmail(
                                 email = AppUrls.SUPPORT_EMAIL,
-                                subject = "SignalWhisper Support Request"
+                                subject = "myOpenClaw Support Request"
                             )
                         }
                     )
@@ -332,7 +332,7 @@ fun SettingsScreen(
                         onClick = {
                             urlLauncher.openEmail(
                                 email = AppUrls.SUPPORT_EMAIL,
-                                subject = "Bug Report - SignalWhisper",
+                                subject = "Bug Report - myOpenClaw",
                                 body = "Please describe the bug:\n\nSteps to reproduce:\n\nExpected behavior:\n\nActual behavior:\n\nDevice info:\n"
                             )
                         }

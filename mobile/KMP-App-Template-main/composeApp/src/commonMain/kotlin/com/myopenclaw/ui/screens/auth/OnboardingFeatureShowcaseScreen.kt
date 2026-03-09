@@ -1,6 +1,5 @@
 package com.myopenclaw.ui.screens.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,26 +12,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myopenclaw.ui.theme.*
-import myopenclaw.composeapp.generated.resources.Res
-import myopenclaw.composeapp.generated.resources.ethusd
-import org.jetbrains.compose.resources.painterResource
 
 enum class FeatureShowcaseSlide {
-    CHART_ANALYSIS,
-    MARKET_SIGNALS,
+    AI_CODING,
+    SMART_TOOLS,
     AI_ASSISTANT
 }
 
 @Composable
 fun OnboardingFeatureShowcaseScreen(
-    currentSlide: FeatureShowcaseSlide = FeatureShowcaseSlide.CHART_ANALYSIS,
+    currentSlide: FeatureShowcaseSlide = FeatureShowcaseSlide.AI_CODING,
     onContinue: () -> Unit = {}
 ) {
     var slide by remember { mutableStateOf(currentSlide) }
@@ -77,8 +72,8 @@ fun OnboardingFeatureShowcaseScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 when (slide) {
-                    FeatureShowcaseSlide.CHART_ANALYSIS -> ChartAnalysisSlide()
-                    FeatureShowcaseSlide.MARKET_SIGNALS -> MarketSignalsSlide()
+                    FeatureShowcaseSlide.AI_CODING -> AICodingSlide()
+                    FeatureShowcaseSlide.SMART_TOOLS -> SmartToolsSlide()
                     FeatureShowcaseSlide.AI_ASSISTANT -> AIAssistantSlide()
                 }
 
@@ -89,8 +84,8 @@ fun OnboardingFeatureShowcaseScreen(
             Button(
                 onClick = {
                     when (slide) {
-                        FeatureShowcaseSlide.CHART_ANALYSIS -> slide = FeatureShowcaseSlide.MARKET_SIGNALS
-                        FeatureShowcaseSlide.MARKET_SIGNALS -> slide = FeatureShowcaseSlide.AI_ASSISTANT
+                        FeatureShowcaseSlide.AI_CODING -> slide = FeatureShowcaseSlide.SMART_TOOLS
+                        FeatureShowcaseSlide.SMART_TOOLS -> slide = FeatureShowcaseSlide.AI_ASSISTANT
                         FeatureShowcaseSlide.AI_ASSISTANT -> onContinue()
                     }
                 },
@@ -119,98 +114,63 @@ fun OnboardingFeatureShowcaseScreen(
 }
 
 @Composable
-fun ChartAnalysisSlide() {
+fun AICodingSlide() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Chart preview with ETH/USD image
+        Spacer(modifier = Modifier.height(48.dp))
+
+        // Code block preview
         Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(280.dp),
+            modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF1A2332),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // ETH/USD chart image
-                Image(
-                    painter = painterResource(Res.drawable.ethusd),
-                    contentDescription = "ETH/USD Chart",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .align(Alignment.Center),
-                    contentScale = ContentScale.Fit
+                Text(
+                    text = "Write a Python function to sort a list",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Primary
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Signal Card
+        // AI Response
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF1A2332),
-            shape = RoundedCornerShape(16.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Primary)
+            shape = RoundedCornerShape(16.dp)
         ) {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Text(
+                    text = "Here's an efficient sorting function:",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.9f)
+                )
+
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF0D1117),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    // Coin icon
-                    Surface(
-                        modifier = Modifier.size(40.dp),
-                        color = Color(0xFFFF9800), // Orange
-                        shape = RoundedCornerShape(50)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                text = "E",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        }
-                    }
-
-                    Column {
-                        Text(
-                            text = "ETH/USD",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                        Text(
-                            text = "Crypto",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.6f)
-                        )
-                    }
-                }
-
-                Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "BUY",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = BullishGreen
-                    )
-                    Text(
-                        text = "75% confidence",
+                        text = "def quick_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[0]\n    left = [x for x in arr[1:] if x <= pivot]\n    right = [x for x in arr[1:] if x > pivot]\n    return quick_sort(left) + [pivot] + quick_sort(right)",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.6f)
+                        color = Color(0xFF7EE787),
+                        modifier = Modifier.padding(12.dp)
                     )
                 }
             }
@@ -218,54 +178,30 @@ fun ChartAnalysisSlide() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Key Insights Grid
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             InsightCard(
-                icon = Icons.Default.TrendingUp,
-                label = "Trend",
-                value = "Bearish",
-                modifier = Modifier.weight(1f),
-                iconColor = BearishRed
-            )
-            InsightCard(
-                icon = Icons.Default.Warning,
-                label = "Trend",
-                value = "Bearish",
-                modifier = Modifier.weight(1f),
-                iconColor = Color(0xFFFFA500)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            InsightCard(
-                icon = Icons.Default.Shield,
-                label = "Risk level",
-                value = "Medium",
+                icon = Icons.Default.Code,
+                label = "Languages",
+                value = "50+",
                 modifier = Modifier.weight(1f),
                 iconColor = Primary
             )
             InsightCard(
-                icon = Icons.Default.BarChart,
-                label = "Volume",
-                value = "Medium",
+                icon = Icons.Default.Speed,
+                label = "Response",
+                value = "Instant",
                 modifier = Modifier.weight(1f),
-                iconColor = Primary
+                iconColor = BullishGreen
             )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Title and Description
         Text(
-            text = "Snap & Analyze Trade charts",
+            text = "AI-Powered Coding Assistant",
             style = MaterialTheme.typography.headlineMedium.copy(fontSize = 28.sp),
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -275,7 +211,7 @@ fun ChartAnalysisSlide() {
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Take a photo any chart, get instant insights on that chart",
+            text = "Write, debug, and optimize code with AI assistance",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.White.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
@@ -285,14 +221,14 @@ fun ChartAnalysisSlide() {
 }
 
 @Composable
-fun MarketSignalsSlide() {
+fun SmartToolsSlide() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Signal Card
+        // Tool execution card
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF1A2332),
@@ -305,55 +241,34 @@ fun MarketSignalsSlide() {
                     .padding(20.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Surface(
+                        modifier = Modifier.size(40.dp),
+                        color = Primary.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(50)
                     ) {
-                        Surface(
-                            modifier = Modifier.size(40.dp),
-                            color = Primary.copy(alpha = 0.2f),
-                            shape = RoundedCornerShape(50)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text(
-                                    text = "A",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Primary
-                                )
-                            }
-                        }
-
-                        Column {
-                            Text(
-                                text = "AUD / USD",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                            Text(
-                                text = "Currency",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.6f)
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                Icons.Default.Build,
+                                contentDescription = null,
+                                tint = Primary,
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     }
 
-                    Column(horizontalAlignment = Alignment.End) {
+                    Column {
                         Text(
-                            text = "$5 → $34",
-                            style = MaterialTheme.typography.titleMedium,
+                            text = "Code Execution",
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                         Text(
-                            text = "BUY",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
+                            text = "Running Python script...",
+                            style = MaterialTheme.typography.bodySmall,
                             color = BullishGreen
                         )
                     }
@@ -363,7 +278,7 @@ fun MarketSignalsSlide() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Details Card
+        // Results Card
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF1A2332),
@@ -376,21 +291,21 @@ fun MarketSignalsSlide() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 DetailRow(
-                    icon = Icons.Default.TrendingUp,
-                    label = "Stock signal",
-                    value = "Closed win",
+                    icon = Icons.Default.Terminal,
+                    label = "Tool",
+                    value = "code_execute",
+                    valueColor = Primary
+                )
+                DetailRow(
+                    icon = Icons.Default.CheckCircle,
+                    label = "Status",
+                    value = "Success",
                     valueColor = BullishGreen
                 )
                 DetailRow(
-                    icon = Icons.Default.AttachMoney,
-                    label = "Entry price",
-                    value = "$602.43",
-                    valueColor = Color.White
-                )
-                DetailRow(
-                    icon = Icons.Default.AttachMoney,
-                    label = "Closing price",
-                    value = "$602.43",
+                    icon = Icons.Default.Timer,
+                    label = "Runtime",
+                    value = "0.3s",
                     valueColor = Color.White
                 )
             }
@@ -398,7 +313,7 @@ fun MarketSignalsSlide() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // P/L Card
+        // Capabilities
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Color(0xFF1A2332),
@@ -411,37 +326,30 @@ fun MarketSignalsSlide() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 DetailRow(
-                    icon = Icons.Default.TrendingUp,
-                    label = "Total P/L",
-                    value = "+$9.20",
-                    valueColor = BullishGreen
+                    icon = Icons.Default.Code,
+                    label = "Execute code",
+                    value = "Python, JS",
+                    valueColor = Color.White
                 )
                 DetailRow(
-                    icon = Icons.Default.TrendingUp,
-                    label = "% Return",
-                    value = "+1.53%",
-                    valueColor = BullishGreen
+                    icon = Icons.Default.Search,
+                    label = "Web search",
+                    value = "Real-time",
+                    valueColor = Color.White
                 )
                 DetailRow(
-                    icon = Icons.Default.GpsFixed,
-                    label = "Take profit",
-                    value = "+1.53%",
-                    valueColor = BullishGreen
-                )
-                DetailRow(
-                    icon = Icons.Default.Warning,
-                    label = "Stop loss",
-                    value = "$576.53",
-                    valueColor = BearishRed
+                    icon = Icons.Default.Description,
+                    label = "File generation",
+                    value = "PDF, CSV",
+                    valueColor = Color.White
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Title and Description
         Text(
-            text = "Morning Market Signals",
+            text = "Smart Tool Execution",
             style = MaterialTheme.typography.headlineMedium.copy(fontSize = 28.sp),
             fontWeight = FontWeight.Bold,
             color = Color.White,
@@ -451,7 +359,7 @@ fun MarketSignalsSlide() {
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Know exactly what to buy, hold, or sell today",
+            text = "Run code, search the web, and generate files — all in chat",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.White.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
@@ -468,32 +376,7 @@ fun AIAssistantSlide() {
     ) {
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Chart Image Card
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp),
-            color = Color(0xFF1A2332),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp)
-            ) {
-                // ETH/USD chart image
-                Image(
-                    painter = painterResource(Res.drawable.ethusd),
-                    contentDescription = "ETH/USD Chart",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Fit
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // AI Message Bubble
+        // User Message Bubble
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = Primary.copy(alpha = 0.15f),
@@ -505,7 +388,7 @@ fun AIAssistantSlide() {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Give me a detailed chart analysis on this",
+                    text = "Help me debug this API timeout issue",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
                     color = Primary
@@ -528,14 +411,14 @@ fun AIAssistantSlide() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "You've got a downtrend that's losing momentum. Notice how the price dropped sharply, then formed a potential double bottom around \$[price]? That's buyers stepping in.",
+                    text = "I see a few potential causes. Let me walk you through the most common ones and how to fix them:",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.9f),
                     lineHeight = 20.sp
                 )
 
                 Text(
-                    text = "The key right now:",
+                    text = "Common causes:",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
@@ -543,17 +426,17 @@ fun AIAssistantSlide() {
 
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        text = "• Strong support at \$234.4",
+                        text = "• Missing timeout configuration",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "• Resistance around \$832.6",
+                        text = "• Connection pool exhaustion",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "• Volume is picking up",
+                        text = "• Unhandled retry logic",
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -578,7 +461,7 @@ fun AIAssistantSlide() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Explain why volume is picking up",
+                    text = "Show me the retry logic fix",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White
                 )
@@ -605,7 +488,7 @@ fun AIAssistantSlide() {
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Your personal trading expert, always available",
+            text = "Your personal AI assistant, always available",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.White.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,

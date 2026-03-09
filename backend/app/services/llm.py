@@ -1,14 +1,18 @@
-"""Anthropic LLM service — handles model routing, streaming, and token counting."""
+"""Anthropic LLM service — handles model routing, streaming, and tool calling."""
 
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import AsyncGenerator
+from typing import Any
 
 import anthropic
 
 from app.config import get_settings
 from app.models.schemas import SSEEvent, SSEEventType
+
+logger = logging.getLogger(__name__)
 
 
 # Cost per million tokens (USD) — used for usage tracking
@@ -113,6 +117,147 @@ async def stream_chat(
     done_event = SSEEvent(
         type=SSEEventType.done,
         total_tokens=input_tokens + output_tokens,
+        credits_used=credits_used,
+        model=model,
+    )
+    yield f"data: {done_event.model_dump_json()}\n\n"
+
+
+async def stream_chat_with_tools(
+    messages: list[dict],
+    model: str,
+    tools: list[dict[str, Any]],
+    tool_executor,
+    conversation_id: str,
+    user_id: str,
+    system_prompt: str = "You are a helpful AI assistant powered by OpenClaw. You have access to tools for code execution, web search, file operations, and HTTP requests.",
+    api_key: str | None = None,
+    max_tool_rounds: int = 10,
+) -> AsyncGenerator[str, None]:
+    """Stream a chat completion with tool calling support.
+
+    Handles the full agentic loop:
+    1. Send messages + tool schemas to Claude
+    2. Stream text tokens as SSE events
+    3. When Claude makes a tool call, emit tool_start, execute, emit tool_result
+    4. Feed tool results back to Claude and continue streaming
+    5. Repeat until Claude produces a final text response (up to max_tool_rounds)
+    """
+    client = _get_client(api_key)
+    total_input_tokens = 0
+    total_output_tokens = 0
+    current_messages = list(messages)
+
+    for round_num in range(max_tool_rounds):
+        try:
+            with client.messages.stream(
+                model=model,
+                max_tokens=8192,
+                system=system_prompt,
+                messages=current_messages,
+                tools=tools,
+            ) as stream:
+                text_parts: list[str] = []
+                tool_calls: list[dict] = []
+                current_tool_name: str | None = None
+                current_tool_input_json = ""
+
+                for event in stream:
+                    if event.type == "content_block_start":
+                        if hasattr(event.content_block, "type"):
+                            if event.content_block.type == "tool_use":
+                                current_tool_name = event.content_block.name
+                                current_tool_input_json = ""
+                                sse = SSEEvent(
+                                    type=SSEEventType.tool_start,
+                                    tool=current_tool_name,
+                                )
+                                yield f"data: {sse.model_dump_json()}\n\n"
+
+                    elif event.type == "content_block_delta":
+                        if hasattr(event.delta, "text"):
+                            text_parts.append(event.delta.text)
+                            sse = SSEEvent(
+                                type=SSEEventType.token,
+                                content=event.delta.text,
+                                model=model,
+                            )
+                            yield f"data: {sse.model_dump_json()}\n\n"
+
+                        elif hasattr(event.delta, "partial_json"):
+                            current_tool_input_json += event.delta.partial_json
+
+                    elif event.type == "content_block_stop":
+                        if current_tool_name:
+                            try:
+                                tool_input = json.loads(current_tool_input_json) if current_tool_input_json else {}
+                            except json.JSONDecodeError:
+                                tool_input = {"raw": current_tool_input_json}
+
+                            tool_calls.append({
+                                "name": current_tool_name,
+                                "input": tool_input,
+                                "id": getattr(event, "index", round_num),
+                            })
+                            current_tool_name = None
+                            current_tool_input_json = ""
+
+                final_message = stream.get_final_message()
+                total_input_tokens += final_message.usage.input_tokens
+                total_output_tokens += final_message.usage.output_tokens
+
+        except anthropic.APIStatusError as e:
+            error_event = SSEEvent(type=SSEEventType.error, error=str(e.message))
+            yield f"data: {error_event.model_dump_json()}\n\n"
+            break
+
+        if not tool_calls:
+            break
+
+        # Build assistant message with tool_use blocks
+        assistant_content = []
+        if text_parts:
+            assistant_content.append({"type": "text", "text": "".join(text_parts)})
+        for tc in tool_calls:
+            assistant_content.append({
+                "type": "tool_use",
+                "id": f"toolu_{round_num}_{tc['name']}",
+                "name": tc["name"],
+                "input": tc["input"],
+            })
+        current_messages.append({"role": "assistant", "content": assistant_content})
+
+        # Execute tools and collect results
+        tool_results = []
+        for tc in tool_calls:
+            result = await tool_executor(
+                tool_name=tc["name"],
+                tool_input=tc["input"],
+                conversation_id=conversation_id,
+                user_id=user_id,
+            )
+
+            sse = SSEEvent(
+                type=SSEEventType.tool_result,
+                tool=tc["name"],
+                output=result[:2000],
+            )
+            yield f"data: {sse.model_dump_json()}\n\n"
+
+            tool_results.append({
+                "type": "tool_result",
+                "tool_use_id": f"toolu_{round_num}_{tc['name']}",
+                "content": result,
+            })
+
+        current_messages.append({"role": "user", "content": tool_results})
+        tool_calls.clear()
+
+    # Done event
+    credits_used = estimate_credits(model, total_input_tokens, total_output_tokens)
+    done_event = SSEEvent(
+        type=SSEEventType.done,
+        total_tokens=total_input_tokens + total_output_tokens,
         credits_used=credits_used,
         model=model,
     )

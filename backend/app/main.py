@@ -13,7 +13,13 @@ from fastapi.responses import JSONResponse
 from app.config import get_settings
 from app.api.conversations import router as conversations_router
 from app.api.users import router as users_router
+from app.api.sandboxes import router as sandboxes_router
+from app.api.files import router as files_router
+from app.api.api_keys import router as api_keys_router
+from app.api.billing import router as billing_router
+from app.api.memory import router as memory_router
 from app.models.schemas import HealthResponse
+from app.services.sandbox import get_sandbox_manager
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +33,14 @@ async def lifespan(app: FastAPI):
     if settings.sentry_dsn:
         sentry_sdk.init(dsn=settings.sentry_dsn, traces_sample_rate=0.1)
 
+    # Start sandbox manager reaper (Phase 4)
+    sandbox_mgr = get_sandbox_manager()
+    await sandbox_mgr.start()
+
     yield  # App runs here
+
+    # Shutdown: destroy all active sandboxes
+    await sandbox_mgr.stop()
 
 
 app = FastAPI(
@@ -49,6 +62,11 @@ app.add_middleware(
 # Mount routers
 app.include_router(conversations_router, prefix="/api/v1")
 app.include_router(users_router, prefix="/api/v1")
+app.include_router(sandboxes_router, prefix="/api/v1")
+app.include_router(files_router, prefix="/api/v1")
+app.include_router(api_keys_router, prefix="/api/v1")
+app.include_router(billing_router, prefix="/api/v1")
+app.include_router(memory_router, prefix="/api/v1")
 
 
 @app.exception_handler(Exception)

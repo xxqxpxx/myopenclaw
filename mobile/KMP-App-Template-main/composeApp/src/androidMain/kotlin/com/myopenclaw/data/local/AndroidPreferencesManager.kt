@@ -176,30 +176,6 @@ class AndroidPreferencesManager(context: Context) : PreferencesManager {
         return prefs.getBoolean(KEY_HAS_USED_FREE_AI_CHAT, false)
     }
 
-    override fun saveFreeChartAnalysisDate(dateString: String) {
-        prefs.edit().putString(KEY_FREE_CHART_ANALYSIS_DATE, dateString).apply()
-    }
-
-    override fun getFreeChartAnalysisDate(): String? {
-        return prefs.getString(KEY_FREE_CHART_ANALYSIS_DATE, null)
-    }
-
-    override fun saveFreeChartAnalysisCount(count: Int) {
-        prefs.edit().putInt(KEY_FREE_CHART_ANALYSIS_COUNT, count).apply()
-    }
-
-    override fun getFreeChartAnalysisCount(): Int {
-        return prefs.getInt(KEY_FREE_CHART_ANALYSIS_COUNT, 0)
-    }
-
-    override fun savePriceAlertsData(jsonData: String) {
-        prefs.edit().putString(KEY_PRICE_ALERTS_DATA, jsonData).apply()
-    }
-
-    override fun getPriceAlertsData(): String? {
-        return prefs.getString(KEY_PRICE_ALERTS_DATA, null)
-    }
-
     override fun saveUserRegistrationDate(timestamp: Long) {
         prefs.edit().putLong(KEY_USER_REGISTRATION_DATE, timestamp).apply()
     }
@@ -255,9 +231,6 @@ class AndroidPreferencesManager(context: Context) : PreferencesManager {
         private const val KEY_WANTS_FREE_TRIAL = "wants_free_trial"
         private const val KEY_WATCHLIST_DATA = "watchlist_data"
         private const val KEY_HAS_USED_FREE_AI_CHAT = "has_used_free_ai_chat"
-        private const val KEY_FREE_CHART_ANALYSIS_DATE = "free_chart_analysis_date"
-        private const val KEY_FREE_CHART_ANALYSIS_COUNT = "free_chart_analysis_count"
-        private const val KEY_PRICE_ALERTS_DATA = "price_alerts_data"
         private const val KEY_USER_REGISTRATION_DATE = "user_registration_date"
         private const val KEY_SUBSCRIPTION_ACTIVE = "subscription_active"
         private const val KEY_SUBSCRIPTION_CHECK_TIMESTAMP = "subscription_check_timestamp"

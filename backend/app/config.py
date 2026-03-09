@@ -19,6 +19,18 @@ class Settings(BaseSettings):
     # E2B (Phase 4)
     e2b_api_key: str = ""
 
+    # BYOK encryption (Phase 7) — 32-byte hex key for AES-256-GCM
+    byok_encryption_key: str = ""
+
+    # Stripe (Phase 8)
+    stripe_secret_key: str = ""
+    stripe_webhook_secret: str = ""
+    stripe_price_starter: str = ""
+    stripe_price_pro: str = ""
+    stripe_price_power: str = ""
+    stripe_price_byok: str = ""
+    stripe_price_topup: str = ""
+
     # Sentry
     sentry_dsn: str = ""
 

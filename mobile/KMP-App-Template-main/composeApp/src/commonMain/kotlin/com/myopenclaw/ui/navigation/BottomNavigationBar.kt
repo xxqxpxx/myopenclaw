@@ -21,9 +21,7 @@ sealed class BottomNavItem(
     val iconVector: ImageVector
 ) {
     data object Home : BottomNavItem("home", "Home", Icons.Outlined.Home)
-    data object Markets : BottomNavItem("markets", "Signals", Icons.Outlined.ShowChart)
-    data object Insights : BottomNavItem("insights", "AI Chat", Icons.Outlined.Chat)
-    data object Watchlist : BottomNavItem("watchlist", "Watchlist", Icons.Default.BookmarkBorder)
+    data object Conversations : BottomNavItem("conversations", "Chats", Icons.Outlined.Chat)
     data object Profile : BottomNavItem("profile", "Profile", Icons.Default.Person)
 }
 
@@ -34,9 +32,7 @@ fun BottomNavigationBar(
 ) {
     val items = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Markets,
-        BottomNavItem.Insights,
-        BottomNavItem.Watchlist,
+        BottomNavItem.Conversations,
         BottomNavItem.Profile
     )
 
@@ -47,9 +43,7 @@ fun BottomNavigationBar(
         items.forEach { item ->
             val testTag = when(item) {
                 is BottomNavItem.Home -> "bottom_nav_home"
-                is BottomNavItem.Markets -> "bottom_nav_markets"
-                is BottomNavItem.Insights -> "bottom_nav_insights"
-                is BottomNavItem.Watchlist -> "bottom_nav_watchlist"
+                is BottomNavItem.Conversations -> "bottom_nav_conversations"
                 is BottomNavItem.Profile -> "bottom_nav_profile"
             }
             NavigationBarItem(

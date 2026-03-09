@@ -2,13 +2,13 @@
 
 > **Kotlin Multiplatform · Android · iOS · Web Dashboard · BYOK + Bundled Keys**
 
-| Attribute | Detail |
-|---|---|
-| **Platforms** | Android, iOS (Kotlin Multiplatform), Web Dashboard (Next.js) |
-| **Core Engine** | OpenClaw (open-source, MIT license, 277k+ GitHub stars) |
-| **Primary AI Model** | Claude (Anthropic) — bundled keys OR BYOK |
-| **Build Duration** | ~10 weeks to MVP, 14 weeks to production-ready |
-| **Key Services** | Supabase · E2B · Anthropic API · RevenueCat · Railway / Fly.io |
+| Attribute            | Detail                                                         |
+| -------------------- | -------------------------------------------------------------- |
+| **Platforms**        | Android, iOS (Kotlin Multiplatform), Web Dashboard (Next.js)   |
+| **Core Engine**      | OpenClaw (open-source, MIT license, 277k+ GitHub stars)        |
+| **Primary AI Model** | Claude (Anthropic) — bundled keys OR BYOK                      |
+| **Build Duration**   | ~10 weeks to MVP, 14 weeks to production-ready                 |
+| **Key Services**     | Supabase · E2B · Anthropic API · RevenueCat · Railway / Fly.io |
 
 ---
 
@@ -82,23 +82,23 @@ The entire system follows a **thin-client architecture**. All the heavy lifting 
 
 Every connection in the system — what protocol it uses and what data flows through it:
 
-| From | → | To | Protocol & Data |
-|---|---|---|---|
-| Android / iOS App (KMP) | → | API Gateway | HTTPS POST — user message + auth JWT token |
-| API Gateway | → | Android / iOS App | SSE stream — agent tokens, tool events, file URLs |
-| Web Dashboard (Next.js) | → | API Gateway | HTTPS REST + EventSource — same endpoints as mobile |
-| API Gateway | → | Supabase Auth | JWT verify — validate every request |
-| API Gateway | → | Supabase DB | PostgreSQL — read credits, write messages, update usage |
-| API Gateway | → | Key Vault (Supabase Vault) | Read encrypted API key — bundled OR BYOK |
-| API Gateway | → | E2B Sandbox Manager | REST — create / resume / pause sandbox per user session |
-| E2B Sandbox | → | OpenClaw Gateway | WebSocket port 18789 — message routing into agent process |
-| OpenClaw Brain (ReAct) | → | Anthropic API | HTTPS — LLM call with tool schemas, streaming response |
-| OpenClaw Tool Dispatcher | → | Code Runner (E2B) | In-process — Python/Node/Bash execution in microVM |
-| OpenClaw Tool Dispatcher | → | Browser (Chromium CDP) | WebSocket — headless browser automation in microVM |
-| OpenClaw Tool Dispatcher | → | File System (microVM) | POSIX I/O — read/write files in isolated environment |
-| OpenClaw Memory | → | Supabase Storage | HTTPS — persist/load Markdown memory files per user |
-| RevenueCat SDK | → | App Stores / Stripe | Native — subscription purchase, webhook → API Gateway |
-| API Gateway | → | RevenueCat API | HTTPS — verify subscription, grant/deduct credits |
+| From                     | →   | To                         | Protocol & Data                                           |
+| ------------------------ | --- | -------------------------- | --------------------------------------------------------- |
+| Android / iOS App (KMP)  | →   | API Gateway                | HTTPS POST — user message + auth JWT token                |
+| API Gateway              | →   | Android / iOS App          | SSE stream — agent tokens, tool events, file URLs         |
+| Web Dashboard (Next.js)  | →   | API Gateway                | HTTPS REST + EventSource — same endpoints as mobile       |
+| API Gateway              | →   | Supabase Auth              | JWT verify — validate every request                       |
+| API Gateway              | →   | Supabase DB                | PostgreSQL — read credits, write messages, update usage   |
+| API Gateway              | →   | Key Vault (Supabase Vault) | Read encrypted API key — bundled OR BYOK                  |
+| API Gateway              | →   | E2B Sandbox Manager        | REST — create / resume / pause sandbox per user session   |
+| E2B Sandbox              | →   | OpenClaw Gateway           | WebSocket port 18789 — message routing into agent process |
+| OpenClaw Brain (ReAct)   | →   | Anthropic API              | HTTPS — LLM call with tool schemas, streaming response    |
+| OpenClaw Tool Dispatcher | →   | Code Runner (E2B)          | In-process — Python/Node/Bash execution in microVM        |
+| OpenClaw Tool Dispatcher | →   | Browser (Chromium CDP)     | WebSocket — headless browser automation in microVM        |
+| OpenClaw Tool Dispatcher | →   | File System (microVM)      | POSIX I/O — read/write files in isolated environment      |
+| OpenClaw Memory          | →   | Supabase Storage           | HTTPS — persist/load Markdown memory files per user       |
+| RevenueCat SDK           | →   | App Stores / Stripe        | Native — subscription purchase, webhook → API Gateway     |
+| API Gateway              | →   | RevenueCat API             | HTTPS — verify subscription, grant/deduct credits         |
 
 ## 1.3 Key Design Decisions
 
@@ -125,22 +125,22 @@ Both modes are supported simultaneously.
 
 # 2. Phase-by-Phase Build Plan
 
-| Phase | Name | Duration | Key Deliverable |
-|---|---|---|---|
-| P1 | Backend Foundation | Week 1–2 | Auth, DB schema, API skeleton on Railway |
-| P2 | Core LLM + Streaming | Week 2–3 | Claude API calls streaming over SSE |
-| P3 | KMP Mobile Clients | Week 3–5 | Android + iOS apps chatting with backend |
-| P4 | OpenClaw Agent + E2B | Week 5–6 | Full OpenClaw agent in E2B sandbox per user |
-| P5 | Tool Execution Layer | Week 6–7 | Code run, web browse, file I/O inside agent |
-| P6 | Web Dashboard | Week 7–8 | Next.js web app with full feature parity |
-| P7 | BYOK + Key Vault | Week 8–9 | Encrypted BYOK flow, multi-provider support |
-| P8 | Billing & Credits | Week 9–10 | RevenueCat + Stripe, credit gates, subscriptions |
-| P9 | Memory & Persistence | Week 10–11 | Cross-session memory, file storage, search |
-| P10 | Polish, Testing & Launch | Week 12–14 | App Store + Play Store + web production launch |
+| Phase | Name                     | Duration   | Key Deliverable                                  |
+| ----- | ------------------------ | ---------- | ------------------------------------------------ |
+| P1    | Backend Foundation       | Week 1–2   | Auth, DB schema, API skeleton on Railway         |
+| P2    | Core LLM + Streaming     | Week 2–3   | Claude API calls streaming over SSE              |
+| P3    | KMP Mobile Clients       | Week 3–5   | Android + iOS apps chatting with backend         |
+| P4    | OpenClaw Agent + E2B     | Week 5–6   | Full OpenClaw agent in E2B sandbox per user      |
+| P5    | Tool Execution Layer     | Week 6–7   | Code run, web browse, file I/O inside agent      |
+| P6    | Web Dashboard            | Week 7–8   | Next.js web app with full feature parity         |
+| P7    | BYOK + Key Vault         | Week 8–9   | Encrypted BYOK flow, multi-provider support      |
+| P8    | Billing & Credits        | Week 9–10  | RevenueCat + Stripe, credit gates, subscriptions |
+| P9    | Memory & Persistence     | Week 10–11 | Cross-session memory, file storage, search       |
+| P10   | Polish, Testing & Launch | Week 12–14 | App Store + Play Store + web production launch   |
 
 ---
 
-## Phase 1 — Backend Foundation (Weeks 1–2)
+## Phase 1 — Backend Foundation (Weeks 1–2) ✅ DONE
 
 > Everything else depends on this phase. We build the skeleton that all clients talk to, the database schema that stores all state, and the authentication system that secures every request.
 
@@ -157,15 +157,15 @@ Both modes are supported simultaneously.
 
 ### Database Schema
 
-| Table | Key Columns | Purpose |
-|---|---|---|
-| `users` | id, email, created_at, subscription_tier, credits_balance | Core user record, linked to Supabase Auth |
-| `conversations` | id, user_id, title, created_at, agent_memory_path, sandbox_id | Each chat session, links to user and sandbox |
-| `messages` | id, conversation_id, role (user/assistant/tool), content, tokens_used, created_at | Every message in every conversation |
-| `usage_logs` | id, user_id, model, input_tokens, output_tokens, cost_usd, created_at | Per-request cost tracking for billing |
-| `api_keys` | id, user_id, provider (anthropic/openai/gemini), encrypted_key, is_active | BYOK keys encrypted via Supabase Vault |
-| `subscriptions` | id, user_id, plan, status, credits_total, credits_used, period_end | Subscription + credit balance management |
-| `files` | id, user_id, conversation_id, filename, size, storage_path, created_at | Files created or uploaded by the agent |
+| Table           | Key Columns                                                                       | Purpose                                      |
+| --------------- | --------------------------------------------------------------------------------- | -------------------------------------------- |
+| `users`         | id, email, created_at, subscription_tier, credits_balance                         | Core user record, linked to Supabase Auth    |
+| `conversations` | id, user_id, title, created_at, agent_memory_path, sandbox_id                     | Each chat session, links to user and sandbox |
+| `messages`      | id, conversation_id, role (user/assistant/tool), content, tokens_used, created_at | Every message in every conversation          |
+| `usage_logs`    | id, user_id, model, input_tokens, output_tokens, cost_usd, created_at             | Per-request cost tracking for billing        |
+| `api_keys`      | id, user_id, provider (anthropic/openai/gemini), encrypted_key, is_active         | BYOK keys encrypted via Supabase Vault       |
+| `subscriptions` | id, user_id, plan, status, credits_total, credits_used, period_end                | Subscription + credit balance management     |
+| `files`         | id, user_id, conversation_id, filename, size, storage_path, created_at            | Files created or uploaded by the agent       |
 
 ### Connections Established
 
@@ -184,7 +184,7 @@ Supabase Auth          →  Email / OAuth        [User registration and login]
 
 ---
 
-## Phase 2 — Core LLM + SSE Streaming (Week 2–3)
+## Phase 2 — Core LLM + SSE Streaming (Week 2–3) ✅ DONE
 
 > Wire the Anthropic Claude API to the backend and stream tokens back to clients. This establishes the fundamental loop: user sends text → backend calls Claude → tokens stream back in real time. No agent yet — just a smart chatbot.
 
@@ -220,12 +220,12 @@ data: {"type":"done","total_tokens":1204,"credits_used":3}
 
 ### Model Routing Logic
 
-| Condition | Model | Cost per M tokens | Use Case |
-|---|---|---|---|
-| Query < 100 tokens, no code/files | Claude Haiku 4.5 | $1.00 in / $5.00 out | ~80% of queries |
-| Query requires analysis, writing | Claude Sonnet 4.6 | $3.00 in / $15.00 out | ~18% of queries |
-| Complex multi-step, BYOK Opus | Claude Opus 4.6 | $15.00 in / $75.00 out | ~2%, power users |
-| BYOK user with own key | User-specified model | User pays directly | BYOK tier only |
+| Condition                         | Model                | Cost per M tokens      | Use Case         |
+| --------------------------------- | -------------------- | ---------------------- | ---------------- |
+| Query < 100 tokens, no code/files | Claude Haiku 4.5     | $1.00 in / $5.00 out   | ~80% of queries  |
+| Query requires analysis, writing  | Claude Sonnet 4.6    | $3.00 in / $15.00 out  | ~18% of queries  |
+| Complex multi-step, BYOK Opus     | Claude Opus 4.6      | $15.00 in / $75.00 out | ~2%, power users |
+| BYOK user with own key            | User-specified model | User pays directly     | BYOK tier only   |
 
 ### Connections Established
 
@@ -244,7 +244,7 @@ API Gateway  →  messages table    [Write assistant response after stream compl
 
 ---
 
-## Phase 3 — Kotlin Multiplatform Mobile Clients (Weeks 3–5)
+## Phase 3 — Kotlin Multiplatform Mobile Clients (Weeks 3–5) 🟡 IN PROGRESS
 
 > Build the Android and iOS native apps using Kotlin Multiplatform. The shared module handles all business logic. Platform-specific UI uses Jetpack Compose (Android) and SwiftUI (iOS).
 
@@ -280,27 +280,27 @@ API Gateway  →  messages table    [Write assistant response after stream compl
 
 ### Shared Module — Key Components
 
-| Component | Responsibilities |
-|---|---|
+| Component         | Responsibilities                                                                   |
+| ----------------- | ---------------------------------------------------------------------------------- |
 | `AgentRepository` | `sendMessage()`, `streamResponse()`, `loadConversations()`, `createConversation()` |
-| `AuthRepository` | `signIn()`, `signUp()`, `signOut()`, `refreshToken()`, `observeAuthState()` |
-| `SSEParser` | Parses SSE event format from Phase 2, emits typed Kotlin sealed classes |
-| `CreditManager` | `fetchBalance()`, `deductCredits()`, `observeBalance()` — synced from Supabase |
-| `FileManager` | `uploadFile()`, `downloadFile()`, `listFiles()` — delegates to Supabase Storage |
-| `SettingsStore` | Stores auth tokens, BYOK key (encrypted at rest), theme, notification prefs |
+| `AuthRepository`  | `signIn()`, `signUp()`, `signOut()`, `refreshToken()`, `observeAuthState()`        |
+| `SSEParser`       | Parses SSE event format from Phase 2, emits typed Kotlin sealed classes            |
+| `CreditManager`   | `fetchBalance()`, `deductCredits()`, `observeBalance()` — synced from Supabase     |
+| `FileManager`     | `uploadFile()`, `downloadFile()`, `listFiles()` — delegates to Supabase Storage    |
+| `SettingsStore`   | Stores auth tokens, BYOK key (encrypted at rest), theme, notification prefs        |
 
 ### UI Screens (Both Platforms)
 
-| Screen | Description | Key Interactions |
-|---|---|---|
-| Home / Conversation List | All past conversations with titles and last message preview | Tap to open, swipe to delete, FAB for new chat |
-| Chat Screen | Main agent interaction: message bubbles, streaming tokens, tool cards, file previews | Send message, view tool execution, tap file to open |
-| Tool Execution Card | Expandable card showing tool name, input, progress, output | Inline in chat stream, expand/collapse |
-| File Viewer | Preview generated files (PDF, images, code, text) with download | Tap file bubble in chat |
-| Settings Screen | Profile, subscription, credits balance, BYOK key input, model selection | Accessed from nav bar |
-| Paywall / Upgrade | Subscription tiers, feature comparison, purchase button | RevenueCat purchase flow |
-| BYOK Screen | Provider picker, API key input, validation, key management | Accessed from Settings |
-| Onboarding | 3-screen intro: capabilities, quick setup, first prompt suggestion | First launch only |
+| Screen                   | Description                                                                          | Key Interactions                                    |
+| ------------------------ | ------------------------------------------------------------------------------------ | --------------------------------------------------- |
+| Home / Conversation List | All past conversations with titles and last message preview                          | Tap to open, swipe to delete, FAB for new chat      |
+| Chat Screen              | Main agent interaction: message bubbles, streaming tokens, tool cards, file previews | Send message, view tool execution, tap file to open |
+| Tool Execution Card      | Expandable card showing tool name, input, progress, output                           | Inline in chat stream, expand/collapse              |
+| File Viewer              | Preview generated files (PDF, images, code, text) with download                      | Tap file bubble in chat                             |
+| Settings Screen          | Profile, subscription, credits balance, BYOK key input, model selection              | Accessed from nav bar                               |
+| Paywall / Upgrade        | Subscription tiers, feature comparison, purchase button                              | RevenueCat purchase flow                            |
+| BYOK Screen              | Provider picker, API key input, validation, key management                           | Accessed from Settings                              |
+| Onboarding               | 3-screen intro: capabilities, quick setup, first prompt suggestion                   | First launch only                                   |
 
 ### Streaming UI Pattern
 
@@ -324,7 +324,7 @@ Android/iOS  →  API Gateway /conversations    [HTTPS REST — load/create/dele
 
 ---
 
-## Phase 4 — OpenClaw Agent Integration + E2B Sandboxes (Weeks 5–6)
+## Phase 4 — OpenClaw Agent Integration + E2B Sandboxes (Weeks 5–6) ✅ DONE
 
 > Upgrade from a simple chatbot to a real autonomous agent. Each user session gets a dedicated OpenClaw process running inside a Firecracker microVM (via E2B). The agent can now plan multi-step tasks and execute tools.
 
@@ -365,13 +365,13 @@ User sends first message
                                         └──────────┘
 ```
 
-| State | Trigger | Action | Cost |
-|---|---|---|---|
-| New | First message in conversation | E2B create + OpenClaw start (~3–5 sec) | $0.000028/sec while running |
-| Active | User sending messages | Messages forwarded to OpenClaw WebSocket | ~$0.10/hour |
-| Idle | No message for 10 minutes | Snapshot microVM state, pause sandbox | $0 |
-| Resuming | New message, sandbox was paused | Resume from snapshot (< 200ms) | $0.000028/sec |
-| Destroyed | User deletes conversation or 7-day TTL | E2B destroy, delete snapshot | $0 |
+| State     | Trigger                                | Action                                   | Cost                        |
+| --------- | -------------------------------------- | ---------------------------------------- | --------------------------- |
+| New       | First message in conversation          | E2B create + OpenClaw start (~3–5 sec)   | $0.000028/sec while running |
+| Active    | User sending messages                  | Messages forwarded to OpenClaw WebSocket | ~$0.10/hour                 |
+| Idle      | No message for 10 minutes              | Snapshot microVM state, pause sandbox    | $0                          |
+| Resuming  | New message, sandbox was paused        | Resume from snapshot (< 200ms)           | $0.000028/sec               |
+| Destroyed | User deletes conversation or 7-day TTL | E2B destroy, delete snapshot             | $0                          |
 
 ### OpenClaw Configuration Per Sandbox
 
@@ -403,22 +403,22 @@ OpenClaw Memory  →  Supabase Storage              [HTTPS — sync memory Markd
 
 ---
 
-## Phase 5 — Tool Execution Layer (Weeks 6–7)
+## Phase 5 — Tool Execution Layer (Weeks 6–7) ✅ DONE
 
 > Activate the agent's real-world capabilities: code execution, web browsing, file creation, and external API calls. All run inside the E2B microVM, completely isolated from other users.
 
 ### Tools to Implement
 
-| Tool Name | Capability | Implementation | UX Event Sent to Client |
-|---|---|---|---|
-| `code_execute` | Run Python, Node.js, or Bash code | OpenClaw built-in, runs in microVM | `tool_start` → code text → output → `tool_done` |
-| `web_browse` | Visit URLs, extract content, click elements | Headless Chromium via CDP inside microVM | `tool_start` → URL → summary → `tool_done` |
-| `web_search` | Search the web and return results | Brave Search API or SerpAPI | `tool_start` → query → result list → `tool_done` |
-| `file_create` | Create files (PDF, DOCX, CSV, code) | Code execution writes to `/workspace/output/` | `file` event with download URL |
-| `file_read` | Read user-uploaded files | User uploads → Supabase → mounted in microVM | `tool_start` → filename → content summary |
-| `http_request` | Call external APIs | Direct HTTP from inside microVM | `tool_start` → URL → response status + body |
-| `memory_read` | Read agent's persistent memory | Read `/workspace/memory/{user_id}/*.md` | Transparent — no UX event |
-| `memory_write` | Save a fact to memory | Write to memory Markdown file | Brief "Saved to memory" indicator |
+| Tool Name      | Capability                                  | Implementation                                | UX Event Sent to Client                          |
+| -------------- | ------------------------------------------- | --------------------------------------------- | ------------------------------------------------ |
+| `code_execute` | Run Python, Node.js, or Bash code           | OpenClaw built-in, runs in microVM            | `tool_start` → code text → output → `tool_done`  |
+| `web_browse`   | Visit URLs, extract content, click elements | Headless Chromium via CDP inside microVM      | `tool_start` → URL → summary → `tool_done`       |
+| `web_search`   | Search the web and return results           | Brave Search API or SerpAPI                   | `tool_start` → query → result list → `tool_done` |
+| `file_create`  | Create files (PDF, DOCX, CSV, code)         | Code execution writes to `/workspace/output/` | `file` event with download URL                   |
+| `file_read`    | Read user-uploaded files                    | User uploads → Supabase → mounted in microVM  | `tool_start` → filename → content summary        |
+| `http_request` | Call external APIs                          | Direct HTTP from inside microVM               | `tool_start` → URL → response status + body      |
+| `memory_read`  | Read agent's persistent memory              | Read `/workspace/memory/{user_id}/*.md`       | Transparent — no UX event                        |
+| `memory_write` | Save a fact to memory                       | Write to memory Markdown file                 | Brief "Saved to memory" indicator                |
 
 ### File Flow: Agent Creates a File → User Downloads It
 
@@ -460,34 +460,34 @@ API Gateway               →  Brave Search / SerpAPI      [Web search results f
 
 ---
 
-## Phase 6 — Web Dashboard (Next.js) (Weeks 7–8)
+## Phase 6 — Web Dashboard (Next.js) (Weeks 7–8) ✅ DONE
 
 > Build the web application with full feature parity to the mobile apps. The web dashboard shares the same backend API and database — it is just another client.
 
 ### Tech Stack
 
-| Layer | Technology | Reason |
-|---|---|---|
-| Framework | Next.js 15 (App Router) | SSR, file-based routing, API routes, excellent DX |
-| Styling | Tailwind CSS + shadcn/ui | Fast, consistent, accessible component library |
-| State Management | Zustand + React Query | Simple global state + server cache management |
-| Auth | Supabase Auth JS SDK | Same auth system as mobile |
-| Streaming | EventSource API (SSE) | Native browser SSE — identical events to mobile |
-| File Preview | react-pdf + Monaco Editor | PDF preview in-browser, code syntax highlighting |
-| Payments | Stripe.js | Web users pay via Stripe — no App Store 30% cut |
-| Deployment | Vercel | Next.js native, global CDN, preview deployments |
+| Layer            | Technology                | Reason                                            |
+| ---------------- | ------------------------- | ------------------------------------------------- |
+| Framework        | Next.js 15 (App Router)   | SSR, file-based routing, API routes, excellent DX |
+| Styling          | Tailwind CSS + shadcn/ui  | Fast, consistent, accessible component library    |
+| State Management | Zustand + React Query     | Simple global state + server cache management     |
+| Auth             | Supabase Auth JS SDK      | Same auth system as mobile                        |
+| Streaming        | EventSource API (SSE)     | Native browser SSE — identical events to mobile   |
+| File Preview     | react-pdf + Monaco Editor | PDF preview in-browser, code syntax highlighting  |
+| Payments         | Stripe.js                 | Web users pay via Stripe — no App Store 30% cut   |
+| Deployment       | Vercel                    | Next.js native, global CDN, preview deployments   |
 
 ### Routes / Pages
 
-| Route | Purpose |
-|---|---|
-| `/` | Landing page with marketing and signup CTA |
-| `/login`, `/signup` | Supabase Auth flows |
-| `/dashboard` | Home: conversation list, New Chat button, usage stats |
-| `/chat/[id]` | Full-width chat with split panel (chat left, file preview right) |
-| `/settings` | Profile, BYOK key management, model selection, subscription |
-| `/billing` | Stripe portal, credit top-ups, invoice history |
-| `/files` | All agent-created files across conversations, downloadable |
+| Route               | Purpose                                                          |
+| ------------------- | ---------------------------------------------------------------- |
+| `/`                 | Landing page with marketing and signup CTA                       |
+| `/login`, `/signup` | Supabase Auth flows                                              |
+| `/dashboard`        | Home: conversation list, New Chat button, usage stats            |
+| `/chat/[id]`        | Full-width chat with split panel (chat left, file preview right) |
+| `/settings`         | Profile, BYOK key management, model selection, subscription      |
+| `/billing`          | Stripe portal, credit top-ups, invoice history                   |
+| `/files`            | All agent-created files across conversations, downloadable       |
 
 ### Web Chat UI Layout
 
@@ -523,21 +523,21 @@ Web Dashboard  →  Supabase Storage            [Signed URL — direct file down
 
 ---
 
-## Phase 7 — BYOK + Key Vault (Weeks 8–9)
+## Phase 7 — BYOK + Key Vault (Weeks 8–9) ✅ DONE
 
 > Allow power users to supply their own AI provider API keys. Keys must be encrypted at rest and never logged.
 
 ### BYOK Security Architecture
 
-| Step | Action | Security Measure |
-|---|---|---|
-| 1. Input | User pastes API key in Settings screen | Key never stored in app state beyond the input field |
-| 2. Transmission | `POST /api-keys` with key in body over HTTPS | TLS 1.3 in transit, key in request body (not URL) |
-| 3. Encryption | Backend encrypts key with AES-256-GCM | Per-user encryption key derived from Supabase Vault master key |
-| 4. Storage | Encrypted ciphertext stored in `api_keys` table | Raw key is **never** stored anywhere — only ciphertext |
-| 5. Usage | On each request, decrypt in-memory, inject to sandbox | Key exists in plaintext only for microseconds, never logged |
-| 6. Validation | Test key with a minimal API call before saving | User sees "Key valid ✓" or specific error message |
-| 7. Deletion | `DELETE /api-keys/{id}` zeros ciphertext in DB | Key unrecoverable after deletion |
+| Step            | Action                                                | Security Measure                                               |
+| --------------- | ----------------------------------------------------- | -------------------------------------------------------------- |
+| 1. Input        | User pastes API key in Settings screen                | Key never stored in app state beyond the input field           |
+| 2. Transmission | `POST /api-keys` with key in body over HTTPS          | TLS 1.3 in transit, key in request body (not URL)              |
+| 3. Encryption   | Backend encrypts key with AES-256-GCM                 | Per-user encryption key derived from Supabase Vault master key |
+| 4. Storage      | Encrypted ciphertext stored in `api_keys` table       | Raw key is **never** stored anywhere — only ciphertext         |
+| 5. Usage        | On each request, decrypt in-memory, inject to sandbox | Key exists in plaintext only for microseconds, never logged    |
+| 6. Validation   | Test key with a minimal API call before saving        | User sees "Key valid ✓" or specific error message              |
+| 7. Deletion     | `DELETE /api-keys/{id}` zeros ciphertext in DB        | Key unrecoverable after deletion                               |
 
 ### Supported Providers (BYOK)
 
@@ -568,32 +568,32 @@ OpenClaw Sandbox               →  User's AI Provider     [HTTPS from inside mi
 
 ---
 
-## Phase 8 — Billing, Credits & Subscriptions (Weeks 9–10)
+## Phase 8 — Billing, Credits & Subscriptions (Weeks 9–10) ✅ DONE
 
 > Implement the full monetization system. Mobile apps use RevenueCat. Web users use Stripe. Credits are a universal currency abstracting per-token costs from users.
 
 ### Subscription Tiers
 
-| Tier | Monthly Price | Credits / Month | Features | Model Access |
-|---|---|---|---|---|
-| Free | $0 | 100 credits | Chat only, no file creation, no code execution | Haiku only |
-| Starter | $9.99 | 2,000 credits | All tools, file creation, web browsing, 5 GB storage | Haiku + Sonnet |
-| Pro | $24.99 | 8,000 credits | All Starter + priority queuing, longer context, 20 GB | Haiku + Sonnet |
-| Power | $74.99 | 30,000 credits | All Pro + Opus access, 100 GB storage, REST API access | All models |
-| BYOK | $14.99 | Unlimited | Bring your own key — no credit limits | User's choice |
-| Top-Up | $4.99 one-time | +1,000 credits | Credit top-up, no expiry | Tier-limited |
+| Tier    | Monthly Price  | Credits / Month | Features                                               | Model Access   |
+| ------- | -------------- | --------------- | ------------------------------------------------------ | -------------- |
+| Free    | $0             | 100 credits     | Chat only, no file creation, no code execution         | Haiku only     |
+| Starter | $9.99          | 2,000 credits   | All tools, file creation, web browsing, 5 GB storage   | Haiku + Sonnet |
+| Pro     | $24.99         | 8,000 credits   | All Starter + priority queuing, longer context, 20 GB  | Haiku + Sonnet |
+| Power   | $74.99         | 30,000 credits  | All Pro + Opus access, 100 GB storage, REST API access | All models     |
+| BYOK    | $14.99         | Unlimited       | Bring your own key — no credit limits                  | User's choice  |
+| Top-Up  | $4.99 one-time | +1,000 credits  | Credit top-up, no expiry                               | Tier-limited   |
 
 ### Credit Cost Per Operation
 
-| Operation | Credits Deducted | Approx. Real Cost |
-|---|---|---|
-| 1 Haiku response (avg 500 tokens) | 1 credit | $0.003 |
-| 1 Sonnet response (avg 500 tokens) | 3 credits | $0.009 |
-| 1 Opus response (avg 500 tokens) | 15 credits | $0.045 |
-| Code execution (per 30-second run) | 5 credits | $0.050 |
-| Web browse (per page visited) | 2 credits | $0.005 |
-| Web search (per query) | 1 credit | $0.003 |
-| File creation (PDF, DOCX, etc.) | 3 credits | $0.010 |
+| Operation                          | Credits Deducted | Approx. Real Cost |
+| ---------------------------------- | ---------------- | ----------------- |
+| 1 Haiku response (avg 500 tokens)  | 1 credit         | $0.003            |
+| 1 Sonnet response (avg 500 tokens) | 3 credits        | $0.009            |
+| 1 Opus response (avg 500 tokens)   | 15 credits       | $0.045            |
+| Code execution (per 30-second run) | 5 credits        | $0.050            |
+| Web browse (per page visited)      | 2 credits        | $0.005            |
+| Web search (per query)             | 1 credit         | $0.003            |
+| File creation (PDF, DOCX, etc.)    | 3 credits        | $0.010            |
 
 ### RevenueCat Integration (Mobile)
 
@@ -649,7 +649,7 @@ API Gateway        →  subscriptions table (Supabase)     [Update credits, tier
 
 ---
 
-## Phase 9 — Memory, Persistence & File Storage (Weeks 10–11)
+## Phase 9 — Memory, Persistence & File Storage (Weeks 10–11) ✅ DONE
 
 > Make the agent feel like it truly knows the user over time. Cross-conversation memory, persistent file storage, and conversation search complete the product experience.
 
@@ -677,6 +677,7 @@ Long-term memory (cross-conversation)
 ### Memory Management UI
 
 Settings screen shows:
+
 - "You have 47 facts stored across 3 memory files"
 - Ability to view, edit, and delete individual memory entries
 - Option to clear all memory
@@ -716,25 +717,30 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 ### Testing Checklist
 
 **Unit Tests**
+
 - [ ] All shared KMP repository functions (mocked API)
 - [ ] All API Gateway endpoints (pytest)
 - [ ] Credit deduction logic
 - [ ] Model routing logic
 
 **Integration Tests**
+
 - [ ] Full message → agent → tool → response flow in test E2B sandbox
 - [ ] BYOK key encryption/decryption round trip
 - [ ] Subscription webhook handling (RevenueCat + Stripe)
 
 **E2E Tests**
+
 - [ ] Maestro scripts: onboarding, send message, subscribe, BYOK setup (Android + iOS)
 - [ ] Playwright scripts: web dashboard critical paths
 
 **Load Testing**
+
 - [ ] k6: 100 concurrent users, verify sandbox scaling and API rate limits
 - [ ] Verify E2B sandbox auto-scale (check concurrent sandbox limit on your E2B plan)
 
 **Security Testing**
+
 - [ ] Sandbox isolation: User A cannot access User B's sandbox or files
 - [ ] BYOK keys not present in any logs
 - [ ] JWT tokens expire and refresh correctly
@@ -743,6 +749,7 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 ### App Store Submission Checklist
 
 **iOS (App Store)**
+
 - [ ] Screenshots for all device sizes (iPhone 6.7", 6.1", iPad Pro)
 - [ ] Privacy manifest (`PrivacyInfo.xcprivacy`) — required iOS 17+
 - [ ] App Privacy nutrition labels filled out
@@ -750,6 +757,7 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 - [ ] Demo video showing: code execution, web browsing, file creation
 
 **Android (Google Play)**
+
 - [ ] Screenshots for phone + tablet
 - [ ] Content rating questionnaire
 - [ ] Data safety form
@@ -757,14 +765,14 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 
 ### Launch Infrastructure
 
-| Service | Config | Purpose |
-|---|---|---|
-| Vercel | Custom domain, edge functions | Web dashboard, global CDN |
-| Railway | Auto-scaling: min 2, max 20 workers | API Gateway scaling |
-| E2B | Pro plan (100+ concurrent sandboxes) | Agent sandboxes |
-| Supabase | Point-in-time recovery, PgBouncer, RLS audit | Database reliability |
-| Sentry | Error tracking (API + mobile + web) | Error monitoring |
-| PostHog | Product analytics | Usage tracking, funnel analysis |
+| Service  | Config                                       | Purpose                         |
+| -------- | -------------------------------------------- | ------------------------------- |
+| Vercel   | Custom domain, edge functions                | Web dashboard, global CDN       |
+| Railway  | Auto-scaling: min 2, max 20 workers          | API Gateway scaling             |
+| E2B      | Pro plan (100+ concurrent sandboxes)         | Agent sandboxes                 |
+| Supabase | Point-in-time recovery, PgBouncer, RLS audit | Database reliability            |
+| Sentry   | Error tracking (API + mobile + web)          | Error monitoring                |
+| PostHog  | Product analytics                            | Usage tracking, funnel analysis |
 
 ### Key Metrics to Track at Launch
 
@@ -779,24 +787,24 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 
 # 3. Complete Tech Stack & Services
 
-| Layer | Technology | Purpose | Est. Monthly Cost |
-|---|---|---|---|
-| Mobile (Android) | Kotlin + Jetpack Compose | Native Android UI | $0 |
-| Mobile (iOS) | Kotlin/Native + SwiftUI | Native iOS UI via KMP interop | $0 (+ $99/yr Apple Dev) |
-| Shared Logic | Kotlin Multiplatform + Ktor | Business logic, API client, SSE parser | $0 |
-| Web Frontend | Next.js 15 + Tailwind CSS | Web dashboard UI | $0–$20 (Vercel hobby) |
-| API Gateway | FastAPI (Python 3.12) | Backend API, streaming, orchestration | $5 (Railway starter) |
-| Agent Engine | OpenClaw (MIT) | AI agent framework inside sandboxes | $0 |
-| Sandboxes | E2B (Firecracker microVMs) | Isolated per-user execution environments | $150+ (usage-based) |
-| AI Model (bundled) | Anthropic Claude API | Haiku / Sonnet / Opus | $2–30 per active user/mo |
-| Database + Auth | Supabase (PostgreSQL) | All data, user auth, RLS, file storage | $0–25 (Pro plan) |
-| Secret Management | Supabase Vault | Encrypted BYOK key storage | Included in Supabase |
-| File Storage | Supabase Storage | Agent output files, user uploads, memory | $0.021/GB/mo |
-| Mobile Subscriptions | RevenueCat | In-app purchase management, A/B paywalls | $0 under $2.5k MRR |
-| Web Subscriptions | Stripe | Web subscription billing, invoicing | 2.9% + $0.30/transaction |
-| Monitoring | Sentry + PostHog | Error tracking + product analytics | $0–26 |
-| Search (agent) | Brave Search API / SerpAPI | Web search tool for agent | $3–9/mo for 1k queries |
-| CI/CD | GitHub Actions | Tests, builds, deploy on merge | $0 (public) |
+| Layer                | Technology                  | Purpose                                  | Est. Monthly Cost        |
+| -------------------- | --------------------------- | ---------------------------------------- | ------------------------ |
+| Mobile (Android)     | Kotlin + Jetpack Compose    | Native Android UI                        | $0                       |
+| Mobile (iOS)         | Kotlin/Native + SwiftUI     | Native iOS UI via KMP interop            | $0 (+ $99/yr Apple Dev)  |
+| Shared Logic         | Kotlin Multiplatform + Ktor | Business logic, API client, SSE parser   | $0                       |
+| Web Frontend         | Next.js 15 + Tailwind CSS   | Web dashboard UI                         | $0–$20 (Vercel hobby)    |
+| API Gateway          | FastAPI (Python 3.12)       | Backend API, streaming, orchestration    | $5 (Railway starter)     |
+| Agent Engine         | OpenClaw (MIT)              | AI agent framework inside sandboxes      | $0                       |
+| Sandboxes            | E2B (Firecracker microVMs)  | Isolated per-user execution environments | $150+ (usage-based)      |
+| AI Model (bundled)   | Anthropic Claude API        | Haiku / Sonnet / Opus                    | $2–30 per active user/mo |
+| Database + Auth      | Supabase (PostgreSQL)       | All data, user auth, RLS, file storage   | $0–25 (Pro plan)         |
+| Secret Management    | Supabase Vault              | Encrypted BYOK key storage               | Included in Supabase     |
+| File Storage         | Supabase Storage            | Agent output files, user uploads, memory | $0.021/GB/mo             |
+| Mobile Subscriptions | RevenueCat                  | In-app purchase management, A/B paywalls | $0 under $2.5k MRR       |
+| Web Subscriptions    | Stripe                      | Web subscription billing, invoicing      | 2.9% + $0.30/transaction |
+| Monitoring           | Sentry + PostHog            | Error tracking + product analytics       | $0–26                    |
+| Search (agent)       | Brave Search API / SerpAPI  | Web search tool for agent                | $3–9/mo for 1k queries   |
+| CI/CD                | GitHub Actions              | Tests, builds, deploy on merge           | $0 (public)              |
 
 ---
 
@@ -804,18 +812,18 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 
 ## Cost Per User Per Month (Starter Tier, $9.99)
 
-| Cost Item | Assumption | Monthly Cost/User |
-|---|---|---|
-| Claude Haiku (80% of calls) | 200 avg calls × 600 tokens × $1/M in + $5/M out | $0.84 |
-| Claude Sonnet (18% of calls) | 45 calls × 600 tokens × $3/M in + $15/M out | $0.54 |
-| E2B sandbox compute | 20 active sessions × 5 min × $0.000028/sec | $0.17 |
-| Supabase storage + DB | Allocated per user (100 MB avg) | $0.12 |
-| API Gateway infra (Railway) | Allocated per user | $0.15 |
-| **Total COGS** | | **$1.82** |
-| Revenue (after Apple 30% cut) | $9.99 × 0.70 = $6.99 | $6.99 |
-| **Gross Margin (mobile)** | | **$5.17 (74%)** |
-| Revenue (web via Stripe 3%) | $9.99 × 0.97 = $9.69 | $9.69 |
-| **Gross Margin (web)** | | **$7.87 (81%)** |
+| Cost Item                     | Assumption                                      | Monthly Cost/User |
+| ----------------------------- | ----------------------------------------------- | ----------------- |
+| Claude Haiku (80% of calls)   | 200 avg calls × 600 tokens × $1/M in + $5/M out | $0.84             |
+| Claude Sonnet (18% of calls)  | 45 calls × 600 tokens × $3/M in + $15/M out     | $0.54             |
+| E2B sandbox compute           | 20 active sessions × 5 min × $0.000028/sec      | $0.17             |
+| Supabase storage + DB         | Allocated per user (100 MB avg)                 | $0.12             |
+| API Gateway infra (Railway)   | Allocated per user                              | $0.15             |
+| **Total COGS**                |                                                 | **$1.82**         |
+| Revenue (after Apple 30% cut) | $9.99 × 0.70 = $6.99                            | $6.99             |
+| **Gross Margin (mobile)**     |                                                 | **$5.17 (74%)**   |
+| Revenue (web via Stripe 3%)   | $9.99 × 0.97 = $9.69                            | $9.69             |
+| **Gross Margin (web)**        |                                                 | **$7.87 (81%)**   |
 
 ## Cost Optimization Strategies
 
@@ -828,53 +836,53 @@ Android/iOS/Web  →  API Gateway /files   [File listing, search, download URL g
 ## Break-Even Analysis
 
 | Active Users | Monthly Revenue | Monthly COGS | Monthly Margin |
-|---|---|---|---|
-| 100 | $750 | $285 | $465 |
-| 1,000 | $7,500 | $2,300 | $5,200 |
-| 10,000 | $75,000 | $19,000 | $56,000 |
-| 50,000 | $375,000 | $85,000 | $290,000 |
+| ------------ | --------------- | ------------ | -------------- |
+| 100          | $750            | $285         | $465           |
+| 1,000        | $7,500          | $2,300       | $5,200         |
+| 10,000       | $75,000         | $19,000      | $56,000        |
+| 50,000       | $375,000        | $85,000      | $290,000       |
 
-*Assumes 5% free-to-paid conversion, blended $7.50 ARPU after stores, avg $1.90 COGS/user*
+_Assumes 5% free-to-paid conversion, blended $7.50 ARPU after stores, avg $1.90 COGS/user_
 
 ---
 
 # 5. 14-Week Timeline
 
-| Week | Phase | Milestone |
-|---|---|---|
-| 1 | P1: Backend Foundation | Supabase DB, Railway FastAPI, auth middleware, CRUD endpoints |
-| 2 | P1–P2 | Claude API integrated, SSE streaming tested end-to-end via curl |
-| 3 | P2–P3 | KMP project setup, shared module, Android app chatting with backend |
-| 4 | P3 | iOS app functional, streaming UI on both platforms, conversation persistence |
-| 5 | P3–P4 | E2B integration, first OpenClaw sandbox created and receiving messages |
-| 6 | P4–P5 | Code execution working, agent writes and runs Python scripts |
-| 7 | P5 | Web browse, web search, file creation tools all working end-to-end |
-| 8 | P6 | Next.js web dashboard with full chat parity, Supabase auth on web |
-| 9 | P7 | BYOK flow complete: key encryption, vault storage, multi-provider support |
-| 10 | P8 | RevenueCat + Stripe integrated, subscription tiers enforced, credit gates |
-| 11 | P9 | Memory persistence cross-conversation, file storage, conversation search |
-| 12 | P10: Testing | All unit + integration + E2E tests passing, load test complete |
-| 13 | P10: Beta | TestFlight + Play Store internal track live, 50 beta users, feedback done |
-| 14 | P10: Launch | App Store + Play Store public launch, web app live, Product Hunt launch |
+| Week | Phase                  | Milestone                                                                    |
+| ---- | ---------------------- | ---------------------------------------------------------------------------- |
+| 1    | P1: Backend Foundation | Supabase DB, Railway FastAPI, auth middleware, CRUD endpoints                |
+| 2    | P1–P2                  | Claude API integrated, SSE streaming tested end-to-end via curl              |
+| 3    | P2–P3                  | KMP project setup, shared module, Android app chatting with backend          |
+| 4    | P3                     | iOS app functional, streaming UI on both platforms, conversation persistence |
+| 5    | P3–P4                  | E2B integration, first OpenClaw sandbox created and receiving messages       |
+| 6    | P4–P5                  | Code execution working, agent writes and runs Python scripts                 |
+| 7    | P5                     | Web browse, web search, file creation tools all working end-to-end           |
+| 8    | P6                     | Next.js web dashboard with full chat parity, Supabase auth on web            |
+| 9    | P7                     | BYOK flow complete: key encryption, vault storage, multi-provider support    |
+| 10   | P8                     | RevenueCat + Stripe integrated, subscription tiers enforced, credit gates    |
+| 11   | P9                     | Memory persistence cross-conversation, file storage, conversation search     |
+| 12   | P10: Testing           | All unit + integration + E2E tests passing, load test complete               |
+| 13   | P10: Beta              | TestFlight + Play Store internal track live, 50 beta users, feedback done    |
+| 14   | P10: Launch            | App Store + Play Store public launch, web app live, Product Hunt launch      |
 
 ---
 
 # 6. Risks & Mitigations
 
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| E2B sandbox cold start > 5 sec | Medium | High | Pre-warm sandboxes on login. Keep active users' sandboxes running. Show progress indicator during creation. |
-| Anthropic API costs exceed revenue at scale | Medium | High | Aggressive model routing (80% Haiku). Prompt caching enabled from Day 1. Hard credit gates. BYOK tier offloads heavy users. |
-| App Store rejection (agent executes code) | Medium | High | All execution is server-side — the app is UI only. Prepare detailed review notes explaining this. QuickClaw and similar apps are approved precedent. |
-| User isolation breach (sandbox escape) | Low | Critical | E2B uses Firecracker (same tech as AWS Lambda). Each user gets a separate microVM. Network policy blocks inter-VM traffic. Regular penetration testing. |
-| OpenClaw project abandoned or license changed | Low | High | MIT license means we can fork at any time. The codebase is self-contained. Maintain an internal fork as fallback. |
-| BYOK key stored insecurely | Low | Critical | AES-256-GCM in Supabase Vault. Key never logged anywhere. Security audit in Phase 10. |
-| Stripe / RevenueCat compliance issues | Medium | Medium | Follow Stripe prohibited items policy. No financial advice in agent system prompt. Proactive disclosure in listings. |
-| KMP iOS interop issues | Medium | Medium | Use well-tested KMP patterns. Keep complex UI 100% in SwiftUI. Only share business logic. Budget extra week for iOS polishing. |
-| Heavy users becoming unprofitable | Medium | Medium | Credit caps per tier. Monitor P99 usage. BYOK tier for power users. Hard rate limits on tool calls per hour. |
+| Risk                                          | Likelihood | Impact   | Mitigation                                                                                                                                              |
+| --------------------------------------------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E2B sandbox cold start > 5 sec                | Medium     | High     | Pre-warm sandboxes on login. Keep active users' sandboxes running. Show progress indicator during creation.                                             |
+| Anthropic API costs exceed revenue at scale   | Medium     | High     | Aggressive model routing (80% Haiku). Prompt caching enabled from Day 1. Hard credit gates. BYOK tier offloads heavy users.                             |
+| App Store rejection (agent executes code)     | Medium     | High     | All execution is server-side — the app is UI only. Prepare detailed review notes explaining this. QuickClaw and similar apps are approved precedent.    |
+| User isolation breach (sandbox escape)        | Low        | Critical | E2B uses Firecracker (same tech as AWS Lambda). Each user gets a separate microVM. Network policy blocks inter-VM traffic. Regular penetration testing. |
+| OpenClaw project abandoned or license changed | Low        | High     | MIT license means we can fork at any time. The codebase is self-contained. Maintain an internal fork as fallback.                                       |
+| BYOK key stored insecurely                    | Low        | Critical | AES-256-GCM in Supabase Vault. Key never logged anywhere. Security audit in Phase 10.                                                                   |
+| Stripe / RevenueCat compliance issues         | Medium     | Medium   | Follow Stripe prohibited items policy. No financial advice in agent system prompt. Proactive disclosure in listings.                                    |
+| KMP iOS interop issues                        | Medium     | Medium   | Use well-tested KMP patterns. Keep complex UI 100% in SwiftUI. Only share business logic. Budget extra week for iOS polishing.                          |
+| Heavy users becoming unprofitable             | Medium     | Medium   | Credit caps per tier. Monitor P99 usage. BYOK tier for power users. Hard rate limits on tool calls per hour.                                            |
 
 ---
 
-*Total estimated time to MVP (P1–P5): 7 weeks. Total to production launch: 14 weeks.*
+_Total estimated time to MVP (P1–P5): 7 weeks. Total to production launch: 14 weeks._
 
-*Built on OpenClaw (MIT License) · Sandboxed by E2B · Powered by Anthropic Claude*
+_Built on OpenClaw (MIT License) · Sandboxed by E2B · Powered by Anthropic Claude_

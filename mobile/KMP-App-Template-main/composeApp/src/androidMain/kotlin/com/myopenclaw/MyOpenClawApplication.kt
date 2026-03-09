@@ -13,7 +13,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
 /**
- * Custom Application class for SignalWhisper
+ * Custom Application class for myOpenClaw
  * Initializes Firebase and Koin dependency injection with Android context
  */
 class MyOpenClawApplication : Application() {
