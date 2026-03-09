@@ -1,0 +1,49 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+.env
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+.ruff_cache/
+
+# Kotlin/Android
+*.iml
+.kotlin
+.gradle
+**/build/
+!src/**/build/
+local.properties
+.idea
+captures
+.externalNativeBuild
+.cxx
+xcuserdata
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+
+# CocoaPods
+iosApp/Pods/
+iosApp/iosApp.xcworkspace/xcuserdata/
+
+# Release artifacts
+*.aab
+*.apk
+*.ipa
+
+# Logs
+maestro-debug/
+maestro-*.log
+
+# Node
+node_modules/

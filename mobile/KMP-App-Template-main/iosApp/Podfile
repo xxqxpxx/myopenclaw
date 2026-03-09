@@ -1,0 +1,28 @@
+platform :ios, '17.0'
+
+target 'iosApp' do
+  use_frameworks!
+
+  # Firebase
+  pod 'FirebaseCore'
+  pod 'FirebaseAuth'
+
+  # Google Sign-In
+  pod 'GoogleSignIn', '~> 8.0'
+
+  # RevenueCat - Required for purchases-kmp-core
+  # Version must match the suffix after '+' in the KMP SDK version (2.2.12+17.21.2)
+  pod 'PurchasesHybridCommon', '17.21.2'
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '17.0'
+        # Disable explicit modules to avoid compiler wrapper issues
+        config.build_settings['CLANG_ENABLE_EXPLICIT_MODULES'] = 'NO'
+        # Ensure we use standard compiler
+        config.build_settings['CC'] = ''
+      end
+    end
+  end
+end

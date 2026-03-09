@@ -1,0 +1,188 @@
+name: Maestro UI Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+  workflow_dispatch:
+
+jobs:
+  maestro-tests:
+    name: Run Maestro UI Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create google-services.json for CI
+        run: |
+          cp composeApp/src/androidMain/google-services.json.template composeApp/google-services.json
+
+      - name: Build Debug APK
+        id: build_apk
+        run: |
+          echo "Building debug APK for Maestro testing..."
+          ./gradlew :composeApp:assembleSignalwhisperDebug --stacktrace
+          APK_PATH=$(find composeApp/build/outputs/apk/signalwhisper/debug -name '*.apk' | head -1)
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "Debug APK built: $APK_PATH"
+
+      - name: Install Maestro CLI
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Verify Maestro Installation
+        run: |
+          export PATH="$HOME/.maestro/bin:$PATH"
+          maestro --version
+
+      - name: Enable KVM
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-kvm
+          sudo usermod -aG kvm $USER
+
+      - name: Create Test Logs Directory
+        run: mkdir -p test-logs
+
+      - name: Run Maestro Tests on Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          disk-size: 4096M
+          heap-size: 512M
+          script: |
+            export PATH="$HOME/.maestro/bin:$PATH"
+
+            # Wait for emulator
+            adb wait-for-device
+            while [ "$(adb shell getprop sys.boot_completed 2>/dev/null)" != "1" ]; do
+              sleep 2
+            done
+            sleep 5
+
+            # Install APK
+            adb install -r "${{ steps.build_apk.outputs.APK_PATH }}"
+
+            echo "Test execution started at $(date -u +%Y-%m-%dT%H:%M:%SZ)" > test-logs/test-run.log
+
+            # Run all test suites (continue on failure)
+            maestro test .maestro/flows/auth/ --include-tags smoke --output ./test-logs/auth-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "AUTH_FAILED=true" >> $GITHUB_ENV
+            maestro test .maestro/flows/navigation/ --output ./test-logs/navigation-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "NAV_FAILED=true" >> $GITHUB_ENV
+            maestro test .maestro/flows/core/ --output ./test-logs/core-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "CORE_FAILED=true" >> $GITHUB_ENV
+            maestro test .maestro/flows/market_data/ --output ./test-logs/market-data-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "MARKET_FAILED=true" >> $GITHUB_ENV
+            maestro test .maestro/flows/subscription/ --output ./test-logs/subscription-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "SUB_FAILED=true" >> $GITHUB_ENV
+            maestro test .maestro/flows/onboarding/ --output ./test-logs/onboarding-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "ONBOARD_FAILED=true" >> $GITHUB_ENV
+            maestro test .maestro/flows/edge_cases/ --output ./test-logs/edge-cases-tests.log 2>&1 | tee -a test-logs/test-run.log || echo "EDGE_FAILED=true" >> $GITHUB_ENV
+
+            echo "All test suites executed"
+
+      - name: Generate Test Summary
+        if: always()
+        run: |
+          echo "Test Execution Summary" > test-logs/summary.md
+          echo "=========================" >> test-logs/summary.md
+          echo "" >> test-logs/summary.md
+          echo "**Execution Details:**" >> test-logs/summary.md
+          echo "- Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> test-logs/summary.md
+          echo "- Branch: ${{ github.ref }}" >> test-logs/summary.md
+          echo "- Commit: ${{ github.sha }}" >> test-logs/summary.md
+          echo "- Actor: ${{ github.actor }}" >> test-logs/summary.md
+          echo "" >> test-logs/summary.md
+          echo "**Test Results:**" >> test-logs/summary.md
+          echo "| Test Suite | Status |" >> test-logs/summary.md
+          echo "|-----------|--------|" >> test-logs/summary.md
+          if [ -z "$AUTH_FAILED" ]; then echo "| Authentication | Passed |" >> test-logs/summary.md; else echo "| Authentication | Failed |" >> test-logs/summary.md; fi
+          if [ -z "$NAV_FAILED" ]; then echo "| Navigation | Passed |" >> test-logs/summary.md; else echo "| Navigation | Failed |" >> test-logs/summary.md; fi
+          if [ -z "$CORE_FAILED" ]; then echo "| Core Features | Passed |" >> test-logs/summary.md; else echo "| Core Features | Failed |" >> test-logs/summary.md; fi
+          if [ -z "$MARKET_FAILED" ]; then echo "| Market Data | Passed |" >> test-logs/summary.md; else echo "| Market Data | Failed |" >> test-logs/summary.md; fi
+          if [ -z "$SUB_FAILED" ]; then echo "| Subscription | Passed |" >> test-logs/summary.md; else echo "| Subscription | Failed |" >> test-logs/summary.md; fi
+          if [ -z "$ONBOARD_FAILED" ]; then echo "| Onboarding | Passed |" >> test-logs/summary.md; else echo "| Onboarding | Failed |" >> test-logs/summary.md; fi
+          if [ -z "$EDGE_FAILED" ]; then echo "| Edge Cases | Passed |" >> test-logs/summary.md; else echo "| Edge Cases | Failed |" >> test-logs/summary.md; fi
+          echo "" >> test-logs/summary.md
+          cat test-logs/summary.md
+
+      - name: Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-logs
+          path: test-logs/
+          retention-days: 30
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-screenshots
+          path: .maestro/screenshots/
+          retention-days: 14
+
+      - name: Publish Test Results to Summary
+        if: always()
+        run: |
+          echo "## Maestro UI Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f test-logs/summary.md ]; then
+            cat test-logs/summary.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check Test Results
+        if: always()
+        run: |
+          FAILED=false
+          [ -n "$AUTH_FAILED" ] && FAILED=true
+          [ -n "$NAV_FAILED" ] && FAILED=true
+          [ -n "$CORE_FAILED" ] && FAILED=true
+          [ -n "$MARKET_FAILED" ] && FAILED=true
+          [ -n "$SUB_FAILED" ] && FAILED=true
+          [ -n "$ONBOARD_FAILED" ] && FAILED=true
+          [ -n "$EDGE_FAILED" ] && FAILED=true
+          if [ "$FAILED" = "true" ]; then
+            echo "Some Maestro tests failed. Check logs for details."
+            exit 1
+          fi
+          echo "All tests passed!"
+
+      - name: Comment PR with Test Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            let summary = 'Test summary not available';
+            try { summary = fs.readFileSync('test-logs/summary.md', 'utf8'); } catch (e) {}
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Maestro UI Tests\n\n${summary}\n\n[View detailed logs](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
+            });

@@ -1,0 +1,31 @@
+*.iml
+.kotlin
+.gradle
+**/build/
+xcuserdata
+!src/**/build/
+local.properties
+.idea
+.DS_Store
+captures
+.externalNativeBuild
+.cxx
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+/composeApp/release/composeApp-release.aab
+
+# CocoaPods
+iosApp/Pods/
+iosApp/iosApp.xcworkspace/xcuserdata/
+
+# Maestro debug logs
+maestro-debug/
+maestro-*.log
+*.png
+composeApp/signalwhisper/release/composeApp-signalwhisper-release.aab
+*.aab
+composeApp/signalwhisper/release/composeApp-signalwhisper-release.aab

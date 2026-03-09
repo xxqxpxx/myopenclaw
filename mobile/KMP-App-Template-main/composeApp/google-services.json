@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "733674476755",
+    "project_id": "trumppulse-lur14",
+    "storage_bucket": "trumppulse-lur14.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733674476755:android:0f5917152c9f2c44073026",
+        "android_client_info": {
+          "package_name": "com.signalwhisper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733674476755-0vraqkbgs6obsiu762dn36pggm5dk6u7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.signalwhisper",
+            "certificate_hash": "146091f555a923b44eaa7fcf3819e295210d3fba"
+          }
+        },
+        {
+          "client_id": "733674476755-8kmj9ss862d0rfkvs4s8da7kjqsefs3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.signalwhisper",
+            "certificate_hash": "26eee1e8321da1ad749a27aee156285501d6a0b4"
+          }
+        },
+        {
+          "client_id": "733674476755-p99hrl43pv62h15flp38q0al28ohdc6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.signalwhisper",
+            "certificate_hash": "157fa958605d63d55967c840671211fe3a7d8ced"
+          }
+        },
+        {
+          "client_id": "733674476755-ghltrlm3ccftoig5bpsmu70mkcf79i59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaaXXs9SIxTCu_2xWppHZmi3QqgZtWRKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733674476755-0g02csjqufeqdkh6bi0oh6tvubupnaal.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "733674476755-l5r6dr6riqrrsv7dorciq7gu2f0doaqj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.signalwhisper"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,22 @@
+// Configuration settings file format documentation:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// Include CocoaPods configuration
+#include? "../Pods/Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"
+#include? "../Pods/Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"
+
+// Inherit linker flags from Pods
+OTHER_LDFLAGS = $(inherited)
+
+// App Name
+APP_NAME = MyOpenClaw
+
+// Bundle Identifier
+PRODUCT_BUNDLE_IDENTIFIER = com.myopenclaw
+
+// Version Configuration
+MARKETING_VERSION = 3.0
+CURRENT_PROJECT_VERSION = 18
+
+// Deployment Target
+IPHONEOS_DEPLOYMENT_TARGET = 17.0

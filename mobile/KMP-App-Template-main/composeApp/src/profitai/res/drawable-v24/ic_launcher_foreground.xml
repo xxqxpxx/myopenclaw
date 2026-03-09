@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Handshake icon adapted for launcher (same as Signal Whisper) -->
+    <group android:scaleX="0.8" android:scaleY="0.8" android:pivotX="54" android:pivotY="54">
+        <!-- Left hand (yellow) -->
+        <path
+            android:fillColor="#F4C430"
+            android:pathData="M20,45 L30,35 C32,33 35,33 37,35 L47,45 C49,47 49,50 47,52 L42,57 L25,57 C22,54 20,50 20,45 Z" />
+
+        <!-- Right hand (dark blue) -->
+        <path
+            android:fillColor="#2E4A6B"
+            android:pathData="M61,45 C61,50 63,54 66,57 L83,57 L78,52 C76,50 76,47 78,45 L88,35 C90,33 93,33 95,35 L85,45 C83,47 80,47 78,45 L68,35 C66,33 63,33 61,35 L61,45 Z" />
+
+        <!-- Connecting area/handshake -->
+        <path
+            android:fillColor="#E6B800"
+            android:pathData="M42,52 L47,47 C49,45 52,45 54,47 C56,49 56,52 54,54 L49,59 L42,52 Z" />
+
+        <!-- Fingers detail -->
+        <path
+            android:fillColor="#2E4A6B"
+            android:pathData="M25,57 L25,62 C25,64 27,66 29,66 L33,66 C35,66 37,64 37,62 L37,57" />
+        <path
+            android:fillColor="#2E4A6B"
+            android:pathData="M71,57 L71,62 C71,64 73,66 75,66 L79,66 C81,66 83,64 83,62 L83,57" />
+    </group>
+</vector>
