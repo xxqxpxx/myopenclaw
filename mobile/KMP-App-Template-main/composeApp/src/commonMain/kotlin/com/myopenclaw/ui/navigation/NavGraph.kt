@@ -167,7 +167,6 @@ fun AppNavigation(
                 }
 
                 SignUpScreen(
-                    viewModel = signUpViewModel,
                     onNavigateToSignIn = { navController.navigate(Screen.SignIn.route) },
                     onNavigateToEmailSignUp = { navController.navigate(Screen.EmailSignUp.route) }
                 )
@@ -199,8 +198,14 @@ fun AppNavigation(
 
                 SignInScreen(
                     viewModel = signInViewModel,
+                    onNavigateBack = { navController.popBackStack() },
                     onNavigateToSignUp = { navController.navigate(Screen.SignUp.route) },
-                    onNavigateToForgotPassword = { navController.navigate(Screen.ForgotPassword.route) }
+                    onNavigateToForgotPassword = { navController.navigate(Screen.ForgotPassword.route) },
+                    onNavigateToHome = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 )
             }
 
@@ -211,9 +216,13 @@ fun AppNavigation(
             }
 
             composable(Screen.EmailSignUp.route) {
+                var signUpEmail by remember { mutableStateOf("") }
+                var signUpDisplayName by remember { mutableStateOf("") }
                 EmailSignUpScreen(
                     onNavigateBack = { navController.popBackStack() },
-                    onNavigateToPasswordSetup = { email ->
+                    onContinue = { email, displayName ->
+                        signUpEmail = email
+                        signUpDisplayName = displayName
                         navController.navigate(Screen.PasswordSetup.route)
                     }
                 )
@@ -221,8 +230,10 @@ fun AppNavigation(
 
             composable(Screen.PasswordSetup.route) {
                 PasswordSetupScreen(
+                    email = "",
+                    displayName = "",
                     onNavigateBack = { navController.popBackStack() },
-                    onPasswordSet = {
+                    onAccountCreated = {
                         navController.navigate(Screen.FeatureShowcase.route) {
                             popUpTo(Screen.SignUp.route) { inclusive = true }
                         }
@@ -232,57 +243,40 @@ fun AppNavigation(
 
             composable(Screen.FeatureShowcase.route) {
                 OnboardingFeatureShowcaseScreen(
-                    onContinue = { navController.navigate(Screen.Testimonials.route) },
-                    onSkip = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    }
+                    onContinue = { navController.navigate(Screen.Testimonials.route) }
                 )
             }
 
             composable(Screen.Testimonials.route) {
                 OnboardingTestimonialsScreen(
-                    onContinue = { navController.navigate(Screen.Questionnaire.route) },
-                    onSkip = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    }
+                    onContinue = { navController.navigate(Screen.Questionnaire.route) }
                 )
             }
 
             composable(Screen.Questionnaire.route) {
-                val onboardingViewModel: OnboardingViewModel = koinInject()
                 OnboardingQuestionnaireScreen(
-                    viewModel = onboardingViewModel,
-                    onContinue = { navController.navigate(Screen.Setup.route) },
-                    onSkip = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    }
+                    onComplete = { navController.navigate(Screen.Setup.route) },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             composable(Screen.Setup.route) {
-                val onboardingViewModel: OnboardingViewModel = koinInject()
                 OnboardingSetupScreen(
-                    viewModel = onboardingViewModel,
-                    onContinue = {
+                    onSetupComplete = {
                         navController.navigate(Screen.FinalCTA.route)
-                    }
+                    },
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 
             composable(Screen.Paywall.route) {
                 OnboardingPaywallScreen(
-                    onSubscribe = {
+                    onSkip = {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(0) { inclusive = true }
                         }
                     },
-                    onSkip = {
+                    onPurchaseSuccess = {
                         navController.navigate(Screen.Home.route) {
                             popUpTo(0) { inclusive = true }
                         }
@@ -294,9 +288,14 @@ fun AppNavigation(
                 val onboardingViewModel: OnboardingViewModel = koinInject()
                 val sessionManager: com.myopenclaw.data.session.SessionManager = koinInject()
                 OnboardingFinalCTAScreen(
-                    viewModel = onboardingViewModel,
-                    onGetStarted = {
-                        onboardingViewModel.completeOnboarding(sessionManager)
+                    onTakePhoto = {
+                        onboardingViewModel.completeOnboarding()
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onGetMarketTrends = {
+                        onboardingViewModel.completeOnboarding()
                         navController.navigate(Screen.Home.route) {
                             popUpTo(0) { inclusive = true }
                         }
@@ -336,10 +335,16 @@ fun AppNavigation(
             }
 
             composable(Screen.Profile.route) {
+                val profileViewModel: com.myopenclaw.ui.viewmodel.profile.ProfileViewModel = koinViewModel()
                 ProfileScreen(
-                    onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
-                    onNavigateToSubscription = { navController.navigate(Screen.Subscription.route) },
-                    onSignOut = {
+                    viewModel = profileViewModel,
+                    onSubscriptionClick = { navController.navigate(Screen.Subscription.route) },
+                    onSignOutSuccess = {
+                        navController.navigate(Screen.SignUp.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onDeleteAccountSuccess = {
                         navController.navigate(Screen.SignUp.route) {
                             popUpTo(0) { inclusive = true }
                         }
@@ -362,12 +367,21 @@ fun AppNavigation(
             }
 
             composable(Screen.SubscriptionRequired.route) {
+                val revenueCatViewModel: RevenueCatViewModel = koinViewModel()
                 SubscriptionRequiredScreen(
-                    onSubscribe = {
-                        navController.navigate(Screen.Subscription.route)
-                    },
-                    onNavigateToHome = {
+                    revenueCatViewModel = revenueCatViewModel,
+                    onSubscriptionSuccess = {
                         navController.navigate(Screen.Home.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onSkipToHome = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onSignOut = {
+                        navController.navigate(Screen.SignUp.route) {
                             popUpTo(0) { inclusive = true }
                         }
                     }
