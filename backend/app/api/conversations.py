@@ -31,6 +31,7 @@ async def create_conversation(
     user: AuthenticatedUser = Depends(get_current_user),
 ):
     """Create a new conversation."""
+    await db.ensure_user_profile(user.user_id, user.email)
     row = await db.create_conversation(user.user_id, body.title)
     return ConversationResponse(**row)
 
