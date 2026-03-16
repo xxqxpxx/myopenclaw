@@ -34,8 +34,9 @@ async def get_or_create_messaging_user(
         .maybe_single()
         .execute()
     )
-    if result.data:
-        return result.data["user_id"]
+    data = result.data if result else None
+    if data:
+        return data["user_id"]
 
     # Create a new user account
     new_user_id = str(uuid.uuid4())

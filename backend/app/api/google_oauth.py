@@ -123,12 +123,16 @@ async def google_auth_disconnect(current_user: AuthenticatedUser = Depends(get_c
 async def google_auth_status(current_user: AuthenticatedUser = Depends(get_current_user)):
     """Check whether the current user has Google connected."""
     db = get_supabase()
-    result = (
-        db.table("oauth_tokens")
-        .select("id,updated_at")
-        .eq("user_id", current_user.user_id)
-        .eq("provider", "google")
-        .maybe_single()
-        .execute()
-    )
-    return {"connected": bool(result.data), "updated_at": result.data.get("updated_at") if result.data else None}
+    try:
+        result = (
+            db.table("oauth_tokens")
+            .select("id,updated_at")
+            .eq("user_id", current_user.user_id)
+            .eq("provider", "google")
+            .maybe_single()
+            .execute()
+        )
+        data = result.data if result else None
+    except Exception:
+        data = None
+    return {"connected": bool(data), "updated_at": data.get("updated_at") if data else None}

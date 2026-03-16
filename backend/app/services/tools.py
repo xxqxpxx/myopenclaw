@@ -643,10 +643,11 @@ async def _get_google_service(user_id: str, service_name: str, version: str):
         .maybe_single()
         .execute()
     )
-    if not result.data:
+    data = result.data if result else None
+    if not data:
         raise ValueError("Google account not connected. Visit Settings → Integrations to connect Google.")
 
-    token_data = result.data["token_data"]
+    token_data = data["token_data"]
     if isinstance(token_data, str):
         token_data = _json.loads(token_data)
 
