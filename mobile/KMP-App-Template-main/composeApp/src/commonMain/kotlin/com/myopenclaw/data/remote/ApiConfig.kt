@@ -1,7 +1,7 @@
 package com.myopenclaw.data.remote
 
 object ApiConfig {
-    var BASE_URL = "http://10.0.2.2:8000"  // Android emulator -> host; change for iOS/prod
+    var BASE_URL = "https://myopenclaw-production-810e.up.railway.app"
         private set
 
     fun setBaseUrl(url: String) {
