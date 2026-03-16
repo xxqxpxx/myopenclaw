@@ -47,3 +47,4 @@ maestro-*.log
 
 # Node
 node_modules/
+.vercel
