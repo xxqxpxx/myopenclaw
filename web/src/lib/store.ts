@@ -10,12 +10,16 @@ import {
 
 interface ChatMessage {
   id: string;
-  role: "user" | "assistant" | "tool";
+  role: "user" | "assistant" | "tool" | "file";
   content: string;
   model?: string;
   isStreaming?: boolean;
   toolName?: string;
   toolOutput?: string;
+  // file message fields
+  filename?: string;
+  url?: string;
+  size?: number;
 }
 
 interface ChatStore {
@@ -66,7 +70,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       set({
         messages: msgs.map((m) => ({
           id: m.id,
-          role: m.role as "user" | "assistant" | "tool",
+          role: m.role as "user" | "assistant" | "tool" | "file",
           content: m.content,
           model: m.model ?? undefined,
         })),
@@ -151,10 +155,18 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             break;
 
           case "tool_start": {
+            // Build a human-readable call summary from the input args
+            const inputSummary =
+              event.input && Object.keys(event.input).length > 0
+                ? ": " +
+                  Object.entries(event.input)
+                    .map(([k, v]) => `${k}=${JSON.stringify(v)}`)
+                    .join(", ")
+                : "";
             const toolMsg: ChatMessage = {
-              id: `tool-${Date.now()}`,
+              id: `tool-${Date.now()}-${crypto.randomUUID()}`,
               role: "tool",
-              content: `Running ${event.tool}...`,
+              content: `Running ${event.tool}${inputSummary}`,
               toolName: event.tool,
             };
             set({ messages: [...state.messages, toolMsg] });
@@ -165,15 +177,37 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             set({
               messages: state.messages.map((m) =>
                 m.role === "tool" && m.toolName === event.tool && !m.toolOutput
-                  ? { ...m, content: event.output || "", toolOutput: event.output }
+                  ? { ...m, content: m.content, toolOutput: event.output || "" }
                   : m
               ),
             });
             break;
 
-          case "error":
-            set({ error: event.error || "Unknown error" });
+          case "file": {
+            const fileMsg: ChatMessage = {
+              id: `file-${Date.now()}-${crypto.randomUUID()}`,
+              role: "file",
+              content: event.filename || "file",
+              filename: event.filename,
+              url: event.url,
+              size: event.size,
+            };
+            set({ messages: [...state.messages, fileMsg] });
             break;
+          }
+
+          case "error": {
+            const rawError = event.error || "Unknown error";
+            // Treat payment-required errors with a friendlier message
+            const displayError =
+              rawError.includes("402") ||
+              rawError.toLowerCase().includes("insufficient credits") ||
+              rawError.toLowerCase().includes("out of credits")
+                ? "Out of credits — buy more to continue"
+                : rawError;
+            set({ error: displayError });
+            break;
+          }
 
           case "done":
             set({

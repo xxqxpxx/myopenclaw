@@ -125,8 +125,10 @@ class SandboxManager:
 
         logger.info("Creating sandbox for conversation %s (user %s)", conversation_id, user_id)
 
+        template = settings.e2b_sandbox_template_id or "base"
         sandbox = await asyncio.to_thread(
             Sandbox,
+            template=template,
             api_key=settings.e2b_api_key,
             env_vars=env_vars,
             timeout=300,  # 5 min keep-alive by default

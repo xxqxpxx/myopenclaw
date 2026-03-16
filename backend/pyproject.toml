@@ -14,6 +14,15 @@ dependencies = [
     "httpx>=0.28.0",
     "sentry-sdk[fastapi]>=2.19.0",
     "python-multipart>=0.0.18",
+    "e2b>=2.15.1",
+    "e2b-code-interpreter>=2.4.1",
+    "websockets>=15.0.1",
+    "python-telegram-bot>=21.0",
+    "notion-client>=2.0.0",
+    "google-auth>=2.0.0",
+    "google-api-python-client>=2.0.0",
+    "PyGithub>=2.0.0",
+    "stripe>=11.0.0",
 ]
 
 [project.optional-dependencies]

@@ -1,11 +1,22 @@
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+
+from pydantic import validator
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     # App
     app_env: str = "development"
     app_debug: bool = False
+
+    # CORS — comma-separated list of allowed origins; defaults to wildcard (dev)
+    cors_origins: list[str] = ["*"]
+
+    @validator("cors_origins", pre=True)
+    def parse_cors_origins(cls, v):
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",")]
+        return v
 
     # Supabase
     supabase_url: str
@@ -16,8 +27,24 @@ class Settings(BaseSettings):
     # Anthropic
     anthropic_api_key: str
 
+    # OpenAI (Whisper transcription for voice messages)
+    openai_api_key: str = ""
+
     # E2B (Phase 4)
     e2b_api_key: str = ""
+    e2b_sandbox_template_id: str = ""
+
+    # Telegram (Phase B)
+    telegram_bot_token: str = ""
+
+    # WhatsApp / Meta Cloud API (Phase B)
+    whatsapp_phone_number_id: str = ""
+    whatsapp_token: str = ""
+
+    # Google OAuth (Phase B)
+    google_client_id: str = ""
+    google_client_secret: str = ""
+    google_redirect_uri: str = ""
 
     # BYOK encryption (Phase 7) — 32-byte hex key for AES-256-GCM
     byok_encryption_key: str = ""

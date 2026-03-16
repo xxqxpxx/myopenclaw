@@ -29,6 +29,7 @@ async function apiFetch<T>(
     const body = await res.json().catch(() => ({ detail: res.statusText }));
     throw new Error(body.detail || res.statusText);
   }
+  if (res.status === 204) return undefined as T;
   return res.json();
 }
 
@@ -151,6 +152,15 @@ export async function streamChat(
   }
 }
 
+// ── Files ──────────────────────────────────────────────────────────────
+
+export async function getFileDownloadUrl(
+  conversationId: string,
+  fileId: string
+): Promise<{ url: string }> {
+  return apiFetch(`/files/${conversationId}/${fileId}/url`);
+}
+
 // ── User Profile ───────────────────────────────────────────────────────
 
 export async function getProfile(): Promise<UserProfile> {
@@ -162,4 +172,73 @@ export async function getCredits(): Promise<{
   subscription_tier: string;
 }> {
   return apiFetch("/users/me/credits");
+}
+
+// ── Billing ────────────────────────────────────────────────────────────
+
+export async function createCheckout(
+  plan: string,
+  successUrl?: string,
+  cancelUrl?: string
+): Promise<{ checkout_url: string }> {
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  return apiFetch("/billing/checkout", {
+    method: "POST",
+    body: JSON.stringify({
+      tier: plan,
+      success_url: successUrl ?? `${origin}/settings?billing=success`,
+      cancel_url: cancelUrl ?? `${origin}/settings?billing=cancel`,
+    }),
+  });
+}
+
+// ── Memory ─────────────────────────────────────────────────────────────
+
+export interface MemoryEntry {
+  id: string;
+  category: string;
+  content: string;
+  created_at: string;
+}
+
+export async function listMemories(category?: string): Promise<MemoryEntry[]> {
+  const qs = category ? `?category=${encodeURIComponent(category)}` : "";
+  return apiFetch(`/memory${qs}`);
+}
+
+export async function deleteMemory(id: string): Promise<void> {
+  await apiFetch(`/memory/${id}`, { method: "DELETE" });
+}
+
+export async function clearAllMemories(): Promise<void> {
+  await apiFetch("/memory", { method: "DELETE" });
+}
+
+// ── Google OAuth ───────────────────────────────────────────────────────
+
+export async function getGoogleStatus(): Promise<{ connected: boolean; updated_at: string | null }> {
+  return apiFetch("/auth/google/status");
+}
+
+export async function disconnectGoogle(): Promise<void> {
+  await apiFetch("/auth/google", { method: "DELETE" });
+}
+
+// ── Preferences & BYOK ─────────────────────────────────────────────────
+
+export async function savePreferences(preferred_model: string): Promise<void> {
+  await apiFetch("/api-keys/preferences", {
+    method: "PUT",
+    body: JSON.stringify({ preferred_model }),
+  });
+}
+
+export async function saveApiKey(
+  provider: "anthropic" | "github" | "notion",
+  api_key: string
+): Promise<void> {
+  await apiFetch("/api-keys", {
+    method: "POST",
+    body: JSON.stringify({ provider, api_key }),
+  });
 }

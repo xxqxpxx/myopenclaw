@@ -1,0 +1,34 @@
+# Custom E2B sandbox image with OpenHands agent runtime.
+#
+# Build and register with E2B:
+#   e2b build -t my-openhands-sandbox
+#
+# Then set E2B_SANDBOX_TEMPLATE_ID to the returned template ID.
+
+FROM e2bdev/code-interpreter:latest
+
+# Install system dependencies for browser tools (Playwright / Chromium)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    wget \
+    gnupg \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install OpenHands and its dependencies
+RUN pip install --no-cache-dir \
+    openhands-ai \
+    playwright
+
+# Install Chromium via Playwright
+RUN playwright install chromium --with-deps
+
+# OpenHands WebSocket gateway listens on this port
+EXPOSE 18789
+
+# Startup script — injects env vars and boots the OpenHands runtime
+COPY start-openhands.sh /start-openhands.sh
+RUN chmod +x /start-openhands.sh
+
+CMD ["/start-openhands.sh"]

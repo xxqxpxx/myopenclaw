@@ -23,10 +23,10 @@ MODEL_COSTS = {
 }
 
 
-def _get_client(api_key: str | None = None) -> anthropic.Anthropic:
-    """Create Anthropic client with bundled or BYOK key."""
+def _get_client(api_key: str | None = None) -> anthropic.AsyncAnthropic:
+    """Create async Anthropic client with bundled or BYOK key."""
     key = api_key or get_settings().anthropic_api_key
-    return anthropic.Anthropic(api_key=key)
+    return anthropic.AsyncAnthropic(api_key=key)
 
 
 def route_model(content: str, user_model: str | None = None) -> str:
@@ -87,13 +87,13 @@ async def stream_chat(
     output_tokens = 0
 
     try:
-        with client.messages.stream(
+        async with client.messages.stream(
             model=model,
             max_tokens=4096,
             system=system_prompt,
             messages=messages,
         ) as stream:
-            for event in stream:
+            async for event in stream:
                 if event.type == "content_block_delta":
                     if hasattr(event.delta, "text"):
                         sse = SSEEvent(
@@ -104,7 +104,7 @@ async def stream_chat(
                         yield f"data: {sse.model_dump_json()}\n\n"
 
             # Final usage from the stream
-            final_message = stream.get_final_message()
+            final_message = await stream.get_final_message()
             input_tokens = final_message.usage.input_tokens
             output_tokens = final_message.usage.output_tokens
 
@@ -150,7 +150,7 @@ async def stream_chat_with_tools(
 
     for round_num in range(max_tool_rounds):
         try:
-            with client.messages.stream(
+            async with client.messages.stream(
                 model=model,
                 max_tokens=8192,
                 system=system_prompt,
@@ -160,13 +160,15 @@ async def stream_chat_with_tools(
                 text_parts: list[str] = []
                 tool_calls: list[dict] = []
                 current_tool_name: str | None = None
+                current_tool_id: str | None = None
                 current_tool_input_json = ""
 
-                for event in stream:
+                async for event in stream:
                     if event.type == "content_block_start":
                         if hasattr(event.content_block, "type"):
                             if event.content_block.type == "tool_use":
                                 current_tool_name = event.content_block.name
+                                current_tool_id = event.content_block.id
                                 current_tool_input_json = ""
                                 sse = SSEEvent(
                                     type=SSEEventType.tool_start,
@@ -197,12 +199,13 @@ async def stream_chat_with_tools(
                             tool_calls.append({
                                 "name": current_tool_name,
                                 "input": tool_input,
-                                "id": getattr(event, "index", round_num),
+                                "id": current_tool_id or f"toolu_{round_num}_{current_tool_name}",
                             })
                             current_tool_name = None
+                            current_tool_id = None
                             current_tool_input_json = ""
 
-                final_message = stream.get_final_message()
+                final_message = await stream.get_final_message()
                 total_input_tokens += final_message.usage.input_tokens
                 total_output_tokens += final_message.usage.output_tokens
 
@@ -221,7 +224,7 @@ async def stream_chat_with_tools(
         for tc in tool_calls:
             assistant_content.append({
                 "type": "tool_use",
-                "id": f"toolu_{round_num}_{tc['name']}",
+                "id": tc["id"],
                 "name": tc["name"],
                 "input": tc["input"],
             })
@@ -246,7 +249,7 @@ async def stream_chat_with_tools(
 
             tool_results.append({
                 "type": "tool_result",
-                "tool_use_id": f"toolu_{round_num}_{tc['name']}",
+                "tool_use_id": tc["id"],
                 "content": result,
             })
 

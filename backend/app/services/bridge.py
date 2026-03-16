@@ -4,7 +4,7 @@ The bridge handles two modes:
 1. **Direct mode** (no sandbox / E2B not configured): Falls through to the existing
    direct Anthropic streaming in llm.py. This keeps the app working without E2B.
 2. **Sandbox mode** (E2B configured): Creates/resumes a sandbox, executes user code
-   or forwards the prompt to an OpenClaw agent process inside the sandbox.
+   or forwards the prompt to an OpenClaw agent process inside the sandbox via WebSocket.
 
 The bridge produces SSE events matching our existing contract (token, tool_start,
 tool_result, file, error, done).
@@ -19,7 +19,7 @@ from collections.abc import AsyncGenerator
 from app.config import get_settings
 from app.models.schemas import SSEEvent, SSEEventType
 from app.services.sandbox import get_sandbox_manager, SandboxState
-from app.services.llm import stream_chat as direct_stream_chat, stream_chat_with_tools, estimate_credits
+from app.services.llm import stream_chat_with_tools
 from app.services.tools import get_tool_schemas, execute_tool
 
 logger = logging.getLogger(__name__)
@@ -97,19 +97,84 @@ async def _stream_from_sandbox(
     model: str,
     system_prompt: str,
 ) -> AsyncGenerator[str, None]:
-    """Execute the user's message inside the sandbox with tool calling.
+    """Forward messages to the OpenHands agent running in the sandbox on port 18789.
 
-    Uses the full tool-calling loop with code execution routed to the sandbox.
-    When OpenClaw is installed in the sandbox image, this will forward to the
-    OpenClaw WebSocket gateway on port 18789 instead.
+    Connects to the OpenHands WebSocket gateway, sends the conversation context,
+    and streams back events mapped to the existing SSE contract.
+
+    Falls back to server-side tool-calling if the WebSocket connection fails
+    (e.g. sandbox image doesn't have OpenHands installed yet).
     """
-    async for sse_line in stream_chat_with_tools(
-        messages=messages,
-        model=model,
-        tools=get_tool_schemas(),
-        tool_executor=execute_tool,
-        conversation_id=info.conversation_id,
-        user_id=info.user_id,
-        system_prompt=system_prompt,
-    ):
-        yield sse_line
+    import websockets
+    import websockets.exceptions
+
+    ws_url = f"wss://{info.sandbox_id}-18789.e2b.dev/ws"
+
+    try:
+        async with websockets.connect(ws_url, open_timeout=10) as ws:
+            await ws.send(json.dumps({
+                "type": "user_message",
+                "messages": messages,
+                "model": model,
+                "system_prompt": system_prompt,
+            }))
+
+            async for raw in ws:
+                event = json.loads(raw)
+                sse = _map_openhands_event(event)
+                if sse:
+                    yield f"data: {sse.model_dump_json()}\n\n"
+
+    except (websockets.exceptions.WebSocketException, OSError, TimeoutError) as e:
+        logger.warning(
+            "WebSocket connection to sandbox %s failed (%s), falling back to direct tool loop",
+            info.sandbox_id, e,
+        )
+        # Fallback: run the tool-calling loop server-side (works without custom image)
+        async for sse_line in stream_chat_with_tools(
+            messages=messages,
+            model=model,
+            tools=get_tool_schemas(),
+            tool_executor=execute_tool,
+            conversation_id=info.conversation_id,
+            user_id=info.user_id,
+            system_prompt=system_prompt,
+        ):
+            yield sse_line
+
+
+def _map_openhands_event(event: dict) -> SSEEvent | None:
+    """Translate an OpenHands WebSocket event to our SSEEvent schema.
+
+    OpenHands emits events with a ``type`` field. We map the subset we care
+    about; unknown event types are silently dropped.
+    """
+    etype = event.get("type", "")
+
+    if etype == "message":
+        # Streaming text token from the agent
+        return SSEEvent(type=SSEEventType.token, content=event.get("content", ""))
+
+    if etype == "action" and event.get("action") == "run":
+        # Agent is about to execute code / a tool
+        return SSEEvent(
+            type=SSEEventType.tool_start,
+            tool=event.get("tool", "code_execute"),
+            input=event.get("args", {}),
+        )
+
+    if etype == "observation":
+        # Result from a tool execution
+        return SSEEvent(
+            type=SSEEventType.tool_result,
+            tool=event.get("tool", "code_execute"),
+            output=str(event.get("content", "")),
+        )
+
+    if etype == "error":
+        return SSEEvent(type=SSEEventType.error, error=event.get("message", "Unknown error"))
+
+    if etype == "done":
+        return SSEEvent(type=SSEEventType.done)
+
+    return None

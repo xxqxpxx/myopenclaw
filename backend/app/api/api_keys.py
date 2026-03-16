@@ -39,7 +39,7 @@ class PreferencesRequest(BaseModel):
 @router.get("", response_model=list[ApiKeyResponse])
 async def list_keys(user: AuthenticatedUser = Depends(get_current_user)):
     """List all stored API keys (hints only — never returns raw keys)."""
-    keys = await db.get_api_keys(user.id)
+    keys = await db.get_api_keys(user.user_id)
     return keys
 
 
@@ -65,7 +65,7 @@ async def submit_key(
 
     encrypted = encrypt_api_key(body.api_key)
     hint = key_hint(body.api_key)
-    row = await db.upsert_api_key(user.id, body.provider, encrypted, hint)
+    row = await db.upsert_api_key(user.user_id, body.provider, encrypted, hint)
     return row
 
 
@@ -75,7 +75,7 @@ async def delete_key(
     user: AuthenticatedUser = Depends(get_current_user),
 ):
     """Delete a stored API key."""
-    deleted = await db.delete_api_key(user.id, provider)
+    deleted = await db.delete_api_key(user.user_id, provider)
     if not deleted:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Key not found")
 
@@ -93,7 +93,7 @@ async def update_preferences(
         fields["preferred_provider"] = body.preferred_provider
     if not fields:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No fields to update")
-    await db.update_user_preferences(user.id, **fields)
+    await db.update_user_preferences(user.user_id, **fields)
     return {"status": "ok"}
 
 

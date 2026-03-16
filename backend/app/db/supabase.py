@@ -378,10 +378,18 @@ async def get_subscription(user_id: str) -> dict | None:
 
 
 async def upsert_subscription(user_id: str, **fields) -> dict:
+    """Upsert a subscription row, updating only the fields that are explicitly provided.
+
+    Kwargs with a value of None are excluded so that a partial call such as
+    ``upsert_subscription(user_id, stripe_customer_id=cid)`` never overwrites
+    existing tier / status columns with nulls.
+    """
     sb = get_supabase()
+    update = {k: v for k, v in fields.items() if v is not None}
+    update["user_id"] = user_id
     result = (
         sb.table("subscriptions")
-        .upsert({"user_id": user_id, **fields}, on_conflict="user_id")
+        .upsert(update, on_conflict="user_id")
         .execute()
     )
     return result.data[0]
@@ -406,8 +414,19 @@ async def add_credits(user_id: str, amount: int) -> int:
         return 0
     new_balance = profile["credits_balance"] + amount
     sb = get_supabase()
-    sb.table("profiles").update({"credits_balance": new_balance}).eq("id", user_id).execute()
+    sb.table("users").update({"credits_balance": new_balance}).eq("id", user_id).execute()
     return new_balance
+
+
+async def update_user_subscription(user_id: str, tier: str, credits_to_add: int) -> dict:
+    """Update a user's subscription tier and add monthly credits.
+
+    Used by billing webhook handlers to activate or downgrade a subscription.
+    Returns the updated subscription row.
+    """
+    result = await upsert_subscription(user_id, tier=tier, status="active")
+    await add_credits(user_id, credits_to_add)
+    return result
 
 
 async def log_credit_purchase(
