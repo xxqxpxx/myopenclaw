@@ -10,13 +10,12 @@ class Settings(BaseSettings):
     app_debug: bool = False
 
     # CORS — comma-separated list of allowed origins; defaults to wildcard (dev)
-    cors_origins: list[str] = ["*"]
+    cors_origins: str = ""
 
-    @validator("cors_origins", pre=True)
-    def parse_cors_origins(cls, v):
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    def get_cors_origins(self) -> list[str]:
+        if not self.cors_origins.strip():
+            return ["*"]
+        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
     # Supabase
     supabase_url: str

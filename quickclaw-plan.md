@@ -41,40 +41,40 @@ The entire system follows a **thin-client architecture**. All the heavy lifting 
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    📱  CLIENTS  (Thin UI Layer)              │
+│                    📱  CLIENTS  (Thin UI Layer)             │
 │  Android App (KMP)  │  iOS App (KMP)  │  Web Dashboard      │
-│  Jetpack Compose    │  SwiftUI        │  Next.js + Tailwind  │
+│  Jetpack Compose    │  SwiftUI        │  Next.js + Tailwind │
 └──────────────────────────┬──────────────────────────────────┘
                            │  HTTPS REST + SSE Streaming
 ┌──────────────────────────▼──────────────────────────────────┐
-│               🔀  API GATEWAY  (FastAPI / Railway)           │
+│               🔀  API GATEWAY  (FastAPI / Railway)          │
 │  Auth (Supabase)  │  Credits/Billing  │  Usage Metering     │
-│  Key Vault        │  Model Router     │  Sandbox Manager     │
+│  Key Vault        │  Model Router     │  Sandbox Manager    │
 └──────────────────────────┬──────────────────────────────────┘
                            │  WebSocket / REST
 ┌──────────────────────────▼──────────────────────────────────┐
-│            🤖  AGENT LAYER  (OpenClaw per user)              │
-│  OpenClaw Gateway  │  ReAct Brain  │  Tool Dispatcher        │
-│  Memory (Markdown) │  Skills       │  Multi-Agent Spawner    │
+│            🤖  AGENT LAYER  (OpenClaw per user)             │
+│  OpenClaw Gateway  │  ReAct Brain  │  Tool Dispatcher       │
+│  Memory (Markdown) │  Skills       │  Multi-Agent Spawner   │
 └──────────────────────────┬──────────────────────────────────┘
           Firecracker microVM (E2B sandbox — 1 per user session)
 ┌──────────────────────────▼──────────────────────────────────┐
-│                 🔧  TOOL EXECUTION LAYER                     │
-│  Code Execution   │  Browser (CDP)  │  File System           │
-│  (Python/Node/Bash)│  Web Browsing  │  HTTP/API Calls        │
+│                 🔧  TOOL EXECUTION LAYER                    │
+│  Code Execution   │  Browser (CDP)  │  File System          │
+│  (Python/Node/Bash)│  Web Browsing  │  HTTP/API Calls       │
 └──────────────────────────┬──────────────────────────────────┘
                            │  LLM API Calls
 ┌──────────────────────────▼──────────────────────────────────┐
-│         🧠  AI MODELS  (Bundled Keys OR BYOK)                │
-│  Claude Haiku (fast/cheap)  │  Claude Sonnet (smart)         │
-│  Claude Opus (heavy tasks)  │  User's own key (BYOK)         │
+│         🧠  AI MODELS  (Bundled Keys OR BYOK)               │
+│  Claude Haiku (fast/cheap)  │  Claude Sonnet (smart)        │
+│  Claude Opus (heavy tasks)  │  User's own key (BYOK)        │
 │  OpenAI GPT-4o  │  Gemini 2.5  │  DeepSeek  │  Ollama       │
 └──────────────────────────┬──────────────────────────────────┘
                            │  Read / Write
 ┌──────────────────────────▼──────────────────────────────────┐
-│         🗄️  DATA LAYER  (Supabase PostgreSQL + Storage)      │
-│  Users  │  Conversations  │  Messages  │  Credits            │
-│  Agent Memory  │  Uploaded Files  │  Usage Logs              │
+│         🗄️  DATA LAYER  (Supabase PostgreSQL + Storage)     │
+│  Users  │  Conversations  │  Messages  │  Credits           │
+│  Agent Memory  │  Uploaded Files  │  Usage Logs             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -346,7 +346,7 @@ User sends first message
         │
         ▼
   ┌─────────────┐     10 min idle      ┌─────────────┐
-  │    ACTIVE   │──────────────────────▶│    IDLE     │
+  │    ACTIVE   │──────────────────────▶│    IDLE    │
   │  ($0.10/hr) │                      │  ($0.00/hr) │
   └──────┬──────┘                      └──────┬──────┘
          │ New message                        │ New message
@@ -360,7 +360,7 @@ User sends first message
                                               │ User deletes / 7-day TTL
                                               ▼
                                         ┌──────────┐
-                                        │ DESTROYED │
+                                        │ DESTROYED│
                                         │  ($0.00) │
                                         └──────────┘
 ```

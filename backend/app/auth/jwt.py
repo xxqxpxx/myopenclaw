@@ -26,19 +26,32 @@ async def get_current_user(
 ) -> AuthenticatedUser:
     """Validate the Supabase JWT and return the authenticated user."""
     token = credentials.credentials
+    # Supabase JWT secret may be base64-encoded — try raw first, then decoded
+    secret = settings.supabase_jwt_secret
     try:
         payload = jwt.decode(
             token,
-            settings.supabase_jwt_secret,
+            secret,
             algorithms=["HS256"],
             audience="authenticated",
         )
     except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        # Try base64-decoded secret (Supabase sometimes provides base64-encoded secret)
+        import base64
+        try:
+            decoded_secret = base64.b64decode(secret + "==")
+            payload = jwt.decode(
+                token,
+                decoded_secret,
+                algorithms=["HS256"],
+                audience="authenticated",
+            )
+        except (JWTError, Exception):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or expired token",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
 
     user_id = payload.get("sub")
     email = payload.get("email", "")
