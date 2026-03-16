@@ -19,6 +19,13 @@ def get_supabase() -> Client:
     return _client
 
 
+def _safe_data(result) -> dict | None:
+    """Safely extract .data from a maybe_single() result that can be None."""
+    if result is None:
+        return None
+    return result.data
+
+
 # ── Conversations ──────────────────────────────────────────────────────────
 
 async def create_conversation(user_id: str, title: str = "New Chat") -> dict:
@@ -54,7 +61,7 @@ async def get_conversation(conversation_id: str, user_id: str) -> dict | None:
         .maybe_single()
         .execute()
     )
-    return result.data
+    return _safe_data(result)
 
 
 async def update_conversation(conversation_id: str, user_id: str, **fields) -> dict | None:
@@ -159,7 +166,7 @@ async def get_user_profile(user_id: str) -> dict | None:
         .maybe_single()
         .execute()
     )
-    return result.data
+    return _safe_data(result)
 
 
 async def ensure_user_profile(user_id: str, email: str) -> dict:
@@ -286,7 +293,7 @@ async def get_file(file_id: str) -> dict | None:
         .maybe_single()
         .execute()
     )
-    return result.data
+    return _safe_data(result)
 
 
 # ── BYOK API Keys ─────────────────────────────────────────────────────────
@@ -374,7 +381,7 @@ async def get_subscription(user_id: str) -> dict | None:
         .maybe_single()
         .execute()
     )
-    return result.data
+    return _safe_data(result)
 
 
 async def upsert_subscription(user_id: str, **fields) -> dict:
@@ -404,7 +411,7 @@ async def get_subscription_by_stripe_customer(customer_id: str) -> dict | None:
         .maybe_single()
         .execute()
     )
-    return result.data
+    return _safe_data(result)
 
 
 async def add_credits(user_id: str, amount: int) -> int:
