@@ -40,7 +40,10 @@ sealed class Screen(val route: String) {
 
     // Onboarding Flow
     data object EmailSignUp : Screen("email_signup")
-    data object PasswordSetup : Screen("password_setup")
+    data object PasswordSetup : Screen("password_setup/{email}/{displayName}") {
+        fun createRoute(email: String, displayName: String) =
+            "password_setup/$email/$displayName"
+    }
     data object FeatureShowcase : Screen("feature_showcase")
     data object Testimonials : Screen("testimonials")
     data object Questionnaire : Screen("questionnaire")
@@ -216,22 +219,20 @@ fun AppNavigation(
             }
 
             composable(Screen.EmailSignUp.route) {
-                var signUpEmail by remember { mutableStateOf("") }
-                var signUpDisplayName by remember { mutableStateOf("") }
                 EmailSignUpScreen(
                     onNavigateBack = { navController.popBackStack() },
                     onContinue = { email, displayName ->
-                        signUpEmail = email
-                        signUpDisplayName = displayName
-                        navController.navigate(Screen.PasswordSetup.route)
+                        navController.navigate(Screen.PasswordSetup.createRoute(email, displayName))
                     }
                 )
             }
 
-            composable(Screen.PasswordSetup.route) {
+            composable(Screen.PasswordSetup.route) { backStackEntry ->
+                val email = backStackEntry.arguments?.getString("email") ?: ""
+                val displayName = backStackEntry.arguments?.getString("displayName") ?: ""
                 PasswordSetupScreen(
-                    email = "",
-                    displayName = "",
+                    email = email,
+                    displayName = displayName,
                     onNavigateBack = { navController.popBackStack() },
                     onAccountCreated = {
                         navController.navigate(Screen.FeatureShowcase.route) {
