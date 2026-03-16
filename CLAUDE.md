@@ -25,9 +25,25 @@ ruff check                                  # Lint (line-length: 100, target Pyt
 ruff check --fix                            # Auto-fix lint issues
 ```
 
+### Mobile (`/mobile/KMP-App-Template-main`)
+```bash
+./gradlew composeApp:compileKotlinAndroid   # Compile check (Android target)
+./gradlew composeApp:assembleDebug          # Build Android debug APK
+```
+
 ### Environment Setup
-- Backend: copy `backend/.env.example` → `backend/.env`
-- Web: set `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+**Backend required env vars** (`backend/.env`):
+```
+SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_JWT_SECRET
+ANTHROPIC_API_KEY
+APP_ENV=development
+```
+Optional: `E2B_API_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_*`, `TELEGRAM_BOT_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_TOKEN`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `BYOK_ENCRYPTION_KEY` (32-byte hex), `OPENAI_API_KEY` (Whisper), `SENTRY_DSN`, `CORS_ORIGINS` (comma-separated, defaults to `*`)
+
+**Web** (`web/.env.local`): `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+**Mobile** (`ApiConfig.kt`): `BASE_URL` defaults to `http://10.0.2.2:8000` (Android emulator → localhost)
 
 ## Architecture
 
@@ -38,12 +54,12 @@ Clients (Web/Android/iOS) → FastAPI Backend (Railway) → E2B Sandboxes → An
                               Supabase (Auth + DB)
 ```
 
-The backend is the central authority for auth, credits, model routing, and sandbox lifecycle. Clients are thin — they authenticate with Supabase, then pass the JWT to all backend calls. The backend validates JWTs using `SUPABASE_JWT_SECRET` via `app/auth/jwt.py`, injecting an `AuthenticatedUser` dependency into every protected route.
+The backend is the central authority for auth, credits, model routing, and sandbox lifecycle. Clients are thin — they authenticate with Supabase, then pass the JWT to all backend calls. The backend validates JWTs using `SUPABASE_JWT_SECRET` via `app/auth/jwt.py` (tries raw secret first, then base64-decoded), injecting an `AuthenticatedUser(user_id, email, role)` dependency into every protected route via `Depends(get_current_user)`.
 
 ### Backend (`backend/app/`)
 
 - **`api/`** — FastAPI routers, all mounted under `/api/v1` except messaging webhooks. Routers: `conversations`, `users`, `sandboxes`, `files`, `api_keys`, `billing`, `memory`, `google_oauth`. Messaging webhooks mount without prefix: `telegram` (`/webhooks/telegram`), `whatsapp` (`/webhooks/whatsapp`). Stripe webhook: `POST /api/v1/billing/webhooks/stripe`.
-- **`services/llm.py`** — Core LLM service. `stream_chat_with_tools()` runs the agentic tool-use loop (up to 10 rounds), emitting SSE events: `token | tool_start | tool_result | done | error`. `route_model()` selects Haiku/Sonnet/Opus based on query complexity and token count.
+- **`services/llm.py`** — Core LLM service. `stream_chat_with_tools()` runs the agentic tool-use loop (up to 10 rounds), emitting SSE `data:` lines: `{"type":"token","content":"…","model":"…"}`, `{"type":"tool_start","tool":"…","input":{…}}`, `{"type":"tool_result","tool":"…","output":"…"}`, `{"type":"file","filename":"…","url":"…","size":N}`, `{"type":"done","total_tokens":N,"credits_used":N}`, `{"type":"error","error":"…"}`. `route_model()` selects Haiku/Sonnet/Opus based on query complexity and token count.
 - **`services/tools.py`** — Anthropic tool schemas (`TOOL_DEFINITIONS`) and execution logic. Available tools: `code_execute` (runs in E2B sandbox), `web_search`, `file_read`, `file_write`.
 - **`services/sandbox.py`** — E2B Firecracker VM lifecycle (creating → active → idle → paused → destroyed). One sandbox per conversation, idle timeout 10 min, max lifetime 7 days.
 - **`services/tiers.py`** — Subscription tier definitions and feature gating logic.
@@ -65,7 +81,7 @@ The backend is the central authority for auth, credits, model routing, and sandb
 
 ### Mobile (`mobile/KMP-App-Template-main/`)
 
-Kotlin Multiplatform project. Shared business logic lives in `composeApp/src/commonMain/`, Android UI in `androidMain/` (Jetpack Compose), iOS UI in `iosMain/` (SwiftUI).
+Kotlin Multiplatform project. Shared business logic lives in `composeApp/src/commonMain/` (ViewModels, repositories, API client via Ktor, domain models), Android UI in `androidMain/` (Jetpack Compose), iOS UI in `iosMain/` (SwiftUI). DI via Koin. Package: `com.myopenclaw`. The app was migrated from a market-data app ("Signalwhisper") — see `mobile/MOBILE_CONTINUATION_PROMPT.md` for remaining cleanup tasks if the build is broken.
 
 ### Database
 
@@ -73,10 +89,11 @@ Supabase PostgreSQL with RLS. Migrations in `backend/migrations/` (run in order 
 
 ## Model Routing & Credits
 
-- **Haiku** → short queries without code
-- **Sonnet** → code/analysis queries or >200 input tokens
-- **Opus** → user-explicit override only
-- Credit conversion: 1 credit ≈ $0.001. Free tier starts with 50 credits. Credits are deducted after stream completes based on actual token usage from the Anthropic response.
+- **Haiku** (`claude-haiku-4-5-20250315`) → short queries without code
+- **Sonnet** (`claude-sonnet-4-20250514`) → code/analysis queries or >200 input tokens
+- **Opus** (`claude-opus-4-20250514`) → user-explicit override only
+- Credit conversion: 1 credit ≈ $0.001. Free tier starts with 50 credits (`DEFAULT_FREE_CREDITS`). Credits are deducted after stream completes based on actual token usage from the Anthropic response.
+- Rate limits: 20 messages/min per user, 100 conversations/user max (configurable via env).
 
 ## Phase Status
 
