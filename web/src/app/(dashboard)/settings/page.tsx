@@ -499,3 +499,11 @@ function SettingsContent() {
     </div>
   );
 }
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-gray-400">Loading…</div>}>
+      <SettingsContent />
+    </Suspense>
+  );
+}

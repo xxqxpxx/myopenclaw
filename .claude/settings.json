@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" == *.py ]]; then cd /Users/ibrahim/side-projects/myopenclaw/backend && ruff check --fix \"$CLAUDE_TOOL_INPUT_FILE_PATH\" 2>/dev/null || true; fi"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_INPUT_FILE_PATH\" == *\".env\" && \"$CLAUDE_TOOL_INPUT_FILE_PATH\" != *\".env.example\" ]]; then echo 'Blocked: edit .env.example instead, then copy manually to .env'; exit 1; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
