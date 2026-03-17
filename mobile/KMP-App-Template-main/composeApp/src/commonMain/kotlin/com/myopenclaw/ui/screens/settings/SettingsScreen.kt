@@ -91,7 +91,7 @@ fun SettingsScreen(
                     Text("- Jetpack Compose", style = MaterialTheme.typography.bodySmall)
                     Text("- Ktor", style = MaterialTheme.typography.bodySmall)
                     Text("- Koin", style = MaterialTheme.typography.bodySmall)
-                    Text("- Firebase SDK", style = MaterialTheme.typography.bodySmall)
+                    Text("- Supabase SDK", style = MaterialTheme.typography.bodySmall)
                     Text("- kotlinx.serialization", style = MaterialTheme.typography.bodySmall)
                     Text("- kotlinx.datetime", style = MaterialTheme.typography.bodySmall)
                 }
@@ -361,7 +361,7 @@ fun SettingsScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     SettingsMenuItem(
                         icon = Icons.Default.Info,
-                        title = "About Signalwhisper",
+                        title = "About my openClaw",
                         subtitle = "Learn more about us",
                         onClick = onNavigateToAbout
                     )

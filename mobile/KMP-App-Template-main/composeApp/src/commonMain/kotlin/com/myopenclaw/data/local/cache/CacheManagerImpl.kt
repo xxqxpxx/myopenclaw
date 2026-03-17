@@ -20,7 +20,7 @@ class CacheManagerImpl(
         encodeDefaults = true
     }
 
-    private val queries get() = database.signalWhisperDatabaseQueries
+    private val queries get() = database.myOpenClawDatabaseQueries
 
     // ==================== Cache Metadata Operations ====================
 

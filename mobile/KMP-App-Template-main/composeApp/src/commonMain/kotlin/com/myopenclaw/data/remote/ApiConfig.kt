@@ -29,6 +29,11 @@ object ApiConfig {
         const val CANCEL_URL = "myopenclaw://checkout/cancel"
     }
 
+    object Supabase {
+        const val URL = "https://isympwnxdzqqzlmmubua.supabase.co"
+        const val ANON_KEY = "sb_publishable_DjEVcEx-UiTQttBudCaptw_bDiUkWD4"
+    }
+
     object Firebase {
         var WEB_CLIENT_ID = "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com"
             private set

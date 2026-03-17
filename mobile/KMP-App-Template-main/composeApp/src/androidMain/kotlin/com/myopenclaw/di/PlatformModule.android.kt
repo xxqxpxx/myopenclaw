@@ -1,7 +1,7 @@
 package com.myopenclaw.di
 
 import com.myopenclaw.data.auth.AuthManager
-import com.myopenclaw.data.auth.FirebaseAuthManager
+import com.myopenclaw.data.auth.SupabaseAuthManager
 import com.myopenclaw.data.auth.MockAuthManager
 import com.myopenclaw.data.auth.GoogleSignInProvider
 import com.myopenclaw.data.auth.AppleSignInProvider
@@ -29,12 +29,12 @@ actual fun platformModule(): Module = module {
         DatabaseDriverFactory(androidContext())
     }
 
-    // Firebase Auth Manager
+    // Supabase Auth Manager
     single<AuthManager> {
-        if (FirebaseConfig.useMockAuth) {
+        if (SupabaseConfig.useMockAuth) {
             MockAuthManager()
         } else {
-            FirebaseAuthManager()
+            SupabaseAuthManager()
         }
     }
 
@@ -42,7 +42,7 @@ actual fun platformModule(): Module = module {
     factory {
         GoogleSignInProvider(
             context = androidContext(),
-            webClientId = FirebaseConfig.webClientId
+            webClientId = SupabaseConfig.webClientId
         )
     }
 

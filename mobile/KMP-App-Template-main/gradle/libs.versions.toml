@@ -12,8 +12,7 @@ materialIconsCore = "1.7.3"
 materialIconsExtended = "1.7.3"
 navigationCompose = "2.9.0-beta03"
 lifecycleCompose = "2.9.1"
-gitlive-firebase = "2.1.0"
-googleServices = "4.4.2"
+supabase = "2.5.2"
 androidx-credentials = "1.5.0-beta01"
 googleid = "1.1.1"
 play-services-auth = "21.3.0"
@@ -43,9 +42,9 @@ material-icons-core = { module = "org.jetbrains.compose.material:material-icons-
 material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
-# Firebase (GitLive - KMP)
-firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "gitlive-firebase" }
-firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "gitlive-firebase" }
+# Supabase (KMP)
+supabase-gotrue-kt = { module = "io.github.jan-tennert.supabase:gotrue-kt", version.ref = "supabase" }
+supabase-core = { module = "io.github.jan-tennert.supabase:supabase-kt", version.ref = "supabase" }
 
 # Android Credentials API for Google Sign-In
 androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "androidx-credentials" }
@@ -71,5 +70,4 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }

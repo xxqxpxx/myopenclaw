@@ -133,8 +133,8 @@ object StringKeys {
 object EnglishTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "Change language",
-        StringKeys.PROFILE_RATE_APP to "Rate Signalwhisper 5 stars",
-        StringKeys.PROFILE_SHARE_APP to "Share Signalwhisper app",
+        StringKeys.PROFILE_RATE_APP to "Rate my openClaw 5 stars",
+        StringKeys.PROFILE_SHARE_APP to "Share my openClaw app",
         StringKeys.PROFILE_CHAT_WITH_US to "Chat with us",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "Terms and conditions",
         StringKeys.PROFILE_PRIVACY_POLICY to "Privacy policy",
@@ -166,8 +166,8 @@ object EnglishTranslations {
 object SpanishTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "Cambiar idioma",
-        StringKeys.PROFILE_RATE_APP to "Calificar Signalwhisper 5 estrellas",
-        StringKeys.PROFILE_SHARE_APP to "Compartir aplicación Signalwhisper",
+        StringKeys.PROFILE_RATE_APP to "Calificar my openClaw 5 estrellas",
+        StringKeys.PROFILE_SHARE_APP to "Compartir aplicación my openClaw",
         StringKeys.PROFILE_CHAT_WITH_US to "Chatea con nosotros",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "Términos y condiciones",
         StringKeys.PROFILE_PRIVACY_POLICY to "Política de privacidad",
@@ -199,8 +199,8 @@ object SpanishTranslations {
 object FrenchTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "Changer la langue",
-        StringKeys.PROFILE_RATE_APP to "Noter Signalwhisper 5 étoiles",
-        StringKeys.PROFILE_SHARE_APP to "Partager l'application Signalwhisper",
+        StringKeys.PROFILE_RATE_APP to "Noter my openClaw 5 étoiles",
+        StringKeys.PROFILE_SHARE_APP to "Partager l'application my openClaw",
         StringKeys.PROFILE_CHAT_WITH_US to "Discutez avec nous",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "Termes et conditions",
         StringKeys.PROFILE_PRIVACY_POLICY to "Politique de confidentialité",
@@ -232,8 +232,8 @@ object FrenchTranslations {
 object GermanTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "Sprache ändern",
-        StringKeys.PROFILE_RATE_APP to "Signalwhisper 5 Sterne bewerten",
-        StringKeys.PROFILE_SHARE_APP to "Signalwhisper App teilen",
+        StringKeys.PROFILE_RATE_APP to "my openClaw 5 Sterne bewerten",
+        StringKeys.PROFILE_SHARE_APP to "my openClaw App teilen",
         StringKeys.PROFILE_CHAT_WITH_US to "Chatten Sie mit uns",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "Allgemeine Geschäftsbedingungen",
         StringKeys.PROFILE_PRIVACY_POLICY to "Datenschutzrichtlinie",
@@ -265,8 +265,8 @@ object GermanTranslations {
 object PortugueseTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "Alterar idioma",
-        StringKeys.PROFILE_RATE_APP to "Avaliar Signalwhisper 5 estrelas",
-        StringKeys.PROFILE_SHARE_APP to "Compartilhar aplicativo Signalwhisper",
+        StringKeys.PROFILE_RATE_APP to "Avaliar my openClaw 5 estrelas",
+        StringKeys.PROFILE_SHARE_APP to "Compartilhar aplicativo my openClaw",
         StringKeys.PROFILE_CHAT_WITH_US to "Converse conosco",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "Termos e condições",
         StringKeys.PROFILE_PRIVACY_POLICY to "Política de privacidade",
@@ -298,8 +298,8 @@ object PortugueseTranslations {
 object ItalianTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "Cambia lingua",
-        StringKeys.PROFILE_RATE_APP to "Valuta Signalwhisper 5 stelle",
-        StringKeys.PROFILE_SHARE_APP to "Condividi app Signalwhisper",
+        StringKeys.PROFILE_RATE_APP to "Valuta my openClaw 5 stelle",
+        StringKeys.PROFILE_SHARE_APP to "Condividi app my openClaw",
         StringKeys.PROFILE_CHAT_WITH_US to "Chatta con noi",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "Termini e condizioni",
         StringKeys.PROFILE_PRIVACY_POLICY to "Informativa sulla privacy",
@@ -331,8 +331,8 @@ object ItalianTranslations {
 object JapaneseTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "言語を変更",
-        StringKeys.PROFILE_RATE_APP to "Signalwhisperを5つ星で評価",
-        StringKeys.PROFILE_SHARE_APP to "Signalwhisperアプリを共有",
+        StringKeys.PROFILE_RATE_APP to "my openClawを5つ星で評価",
+        StringKeys.PROFILE_SHARE_APP to "my openClawアプリを共有",
         StringKeys.PROFILE_CHAT_WITH_US to "お問い合わせ",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "利用規約",
         StringKeys.PROFILE_PRIVACY_POLICY to "プライバシーポリシー",
@@ -364,8 +364,8 @@ object JapaneseTranslations {
 object ChineseTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "更改语言",
-        StringKeys.PROFILE_RATE_APP to "为Signalwhisper评分5星",
-        StringKeys.PROFILE_SHARE_APP to "分享Signalwhisper应用",
+        StringKeys.PROFILE_RATE_APP to "为my openClaw评分5星",
+        StringKeys.PROFILE_SHARE_APP to "分享my openClaw应用",
         StringKeys.PROFILE_CHAT_WITH_US to "与我们聊天",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "条款和条件",
         StringKeys.PROFILE_PRIVACY_POLICY to "隐私政策",
@@ -397,8 +397,8 @@ object ChineseTranslations {
 object KoreanTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "언어 변경",
-        StringKeys.PROFILE_RATE_APP to "Signalwhisper 5점 평가",
-        StringKeys.PROFILE_SHARE_APP to "Signalwhisper 앱 공유",
+        StringKeys.PROFILE_RATE_APP to "my openClaw 5점 평가",
+        StringKeys.PROFILE_SHARE_APP to "my openClaw 앱 공유",
         StringKeys.PROFILE_CHAT_WITH_US to "문의하기",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "이용 약관",
         StringKeys.PROFILE_PRIVACY_POLICY to "개인정보 보호정책",
@@ -430,8 +430,8 @@ object KoreanTranslations {
 object ArabicTranslations {
     val strings = mapOf(
         StringKeys.PROFILE_CHANGE_LANGUAGE to "تغيير اللغة",
-        StringKeys.PROFILE_RATE_APP to "قيم Signalwhisper 5 نجوم",
-        StringKeys.PROFILE_SHARE_APP to "شارك تطبيق Signalwhisper",
+        StringKeys.PROFILE_RATE_APP to "قيم my openClaw 5 نجوم",
+        StringKeys.PROFILE_SHARE_APP to "شارك تطبيق my openClaw",
         StringKeys.PROFILE_CHAT_WITH_US to "تحدث معنا",
         StringKeys.PROFILE_TERMS_AND_CONDITIONS to "الشروط والأحكام",
         StringKeys.PROFILE_PRIVACY_POLICY to "سياسة الخصوصية",

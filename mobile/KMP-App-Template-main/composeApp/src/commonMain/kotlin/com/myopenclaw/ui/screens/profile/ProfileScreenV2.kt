@@ -191,12 +191,12 @@ fun ProfileScreenV2(
             Spacer(modifier = Modifier.height(Dimensions.spacingLarge))
             MenuItemCard(
                 icon = Icons.Default.Star,
-                title = "Rate Signalwhisper 5 stars",
+                title = "Rate my openClaw 5 stars",
                 onClick = onRateApp
             )
             MenuItemCard(
                 icon = Icons.Default.Share,
-                title = "Share Signalwhisper app",
+                title = "Share my openClaw app",
                 onClick = onShareApp
             )
             MenuItemCard(

@@ -13,11 +13,10 @@ import org.koin.core.module.Module
 expect fun platformModule(): Module
 
 /**
- * Configuration for Firebase Auth
+ * Configuration for Supabase Auth
  */
-object FirebaseConfig {
-    // Google Web Client ID from Firebase Console (TrumpPulse project)
-    // This should be set from your google-services.json (Android) or GoogleService-Info.plist (iOS)
+object SupabaseConfig {
+    // Google Web Client ID (still used for Google Sign-In)
     var webClientId: String = "733674476755-ghltrlm3ccftoig5bpsmu70mkcf79i59.apps.googleusercontent.com"
 
     // Whether to use mock auth for development

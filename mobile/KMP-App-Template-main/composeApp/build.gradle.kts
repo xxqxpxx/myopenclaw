@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
-    alias(libs.plugins.googleServices)
     alias(libs.plugins.sqldelight)
 }
 
@@ -109,9 +108,9 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
 
-            // Firebase (GitLive - KMP)
-            implementation(libs.firebase.auth)
-            implementation(libs.firebase.common)
+            // Supabase (KMP)
+            implementation(libs.supabase.core)
+            implementation(libs.supabase.gotrue.kt)
 
             // RevenueCat (KMP)
             implementation(libs.revenuecat.purchases.kmp)

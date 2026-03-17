@@ -26,7 +26,7 @@ sealed class SessionState {
 /**
  * Manages user session persistence and restoration.
  *
- * Coordinates between Firebase Auth and local preferences to ensure
+ * Coordinates between Supabase Auth and local preferences to ensure
  * seamless auto-login experience across app restarts.
  */
 class SessionManager(
@@ -45,13 +45,13 @@ class SessionManager(
     suspend fun checkSession(): SessionState {
         // println("SessionManager: Checking session...")
 
-        // Give Firebase SDK a moment to initialize and restore session
-        // This handles the case where Firebase hasn't fully initialized yet
+        // Give Supabase SDK a moment to initialize and restore session
+        // This handles the case where Supabase hasn't fully initialized yet
         val maxRetries = 3
         var retryCount = 0
 
         while (retryCount < maxRetries) {
-            // Check if Firebase has a current user
+            // Check if Supabase has a current user
             val currentUser = authManager.getCurrentUser()
 
             if (currentUser != null) {
@@ -92,13 +92,13 @@ class SessionManager(
                 }
             }
 
-            // If remember me is set but Firebase session not ready, wait a bit
+            // If remember me is set but Supabase session not ready, wait a bit
             val rememberMe = preferencesManager.getRememberMe()
             val savedUserId = preferencesManager.getUserId()
 
             if (rememberMe && savedUserId != null && retryCount < maxRetries - 1) {
-                // println("SessionManager: RememberMe set, waiting for Firebase to restore session... (attempt ${retryCount + 1})")
-                delay(500) // Wait for Firebase to initialize
+                // println("SessionManager: RememberMe set, waiting for Supabase to restore session... (attempt ${retryCount + 1})")
+                delay(500) // Wait for Supabase to initialize
                 retryCount++
             } else {
                 break
