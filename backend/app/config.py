@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     # E2B (Phase 4)
     e2b_api_key: str = ""
     e2b_sandbox_template_id: str = ""
+    e2b_webhook_secret: str = ""
 
     # Telegram (Phase B)
     telegram_bot_token: str = ""

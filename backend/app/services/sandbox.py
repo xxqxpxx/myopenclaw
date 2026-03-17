@@ -134,6 +134,39 @@ class SandboxManager:
             timeout=300,  # 5 min keep-alive by default
         )
 
+        # Start the OpenClaw Gateway inside the sandbox
+        try:
+            await asyncio.to_thread(
+                sandbox.commands.run,
+                "/root/start-openclaw.sh",
+                background=True,
+            )
+
+            # Wait for Gateway to be ready (poll port 18789)
+            for attempt in range(15):
+                try:
+                    check = await asyncio.to_thread(
+                        sandbox.commands.run,
+                        "curl -s -o /dev/null -w '%{http_code}' "
+                        "http://localhost:18789/health || echo 'not_ready'",
+                    )
+                    if "200" in check.stdout or "101" in check.stdout:
+                        logger.info(
+                            "OpenClaw Gateway ready in sandbox %s (attempt %d)",
+                            sandbox.sandbox_id, attempt + 1,
+                        )
+                        break
+                except Exception:
+                    pass
+                await asyncio.sleep(1)
+            else:
+                logger.warning(
+                    "OpenClaw Gateway may not be ready in sandbox %s — proceeding anyway",
+                    sandbox.sandbox_id,
+                )
+        except Exception as e:
+            logger.warning("Failed to start OpenClaw in sandbox %s: %s", sandbox.sandbox_id, e)
+
         info = SandboxInfo(
             sandbox_id=sandbox.sandbox_id,
             conversation_id=conversation_id,

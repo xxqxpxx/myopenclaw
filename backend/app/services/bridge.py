@@ -97,14 +97,19 @@ async def _stream_from_sandbox(
     model: str,
     system_prompt: str,
 ) -> AsyncGenerator[str, None]:
-    """Forward messages to the OpenHands agent running in the sandbox on port 18789.
+    """Connect to the OpenClaw Gateway WebSocket in the sandbox and stream events.
 
-    Connects to the OpenHands WebSocket gateway, sends the conversation context,
-    and streams back events mapped to the existing SSE contract.
+    OpenClaw Gateway Protocol:
+    1. Connect to wss://{sandbox_id}-18789.e2b.dev/ws
+    2. Send connect frame: {type:"req", method:"connect", role:"operator", ...}
+    3. Receive connect ack: {type:"res", ok:true, ...}
+    4. Send chat message: {type:"event", event:"chat.send", payload:{text:"..."}}
+    5. Receive streamed events: thinking, tool_start, tool_result, message, done
 
-    Falls back to server-side tool-calling if the WebSocket connection fails
-    (e.g. sandbox image doesn't have OpenHands installed yet).
+    Falls back to direct LLM tool-calling if WebSocket fails.
     """
+    import asyncio as _asyncio
+    import uuid
     import websockets
     import websockets.exceptions
 
@@ -112,69 +117,155 @@ async def _stream_from_sandbox(
 
     try:
         async with websockets.connect(ws_url, open_timeout=10) as ws:
+            # Step 1: Send connect frame (operator role)
+            connect_id = str(uuid.uuid4())[:8]
             await ws.send(json.dumps({
-                "type": "user_message",
-                "messages": messages,
-                "model": model,
-                "system_prompt": system_prompt,
+                "type": "req",
+                "id": connect_id,
+                "method": "connect",
+                "params": {
+                    "minProtocol": 1,
+                    "maxProtocol": 1,
+                    "role": "operator",
+                    "client": {
+                        "name": "myopenclaw-backend",
+                        "version": "1.0.0",
+                    },
+                }
             }))
 
+            # Step 2: Wait for connect ack
+            ack_raw = await _asyncio.wait_for(ws.recv(), timeout=5)
+            ack = json.loads(ack_raw)
+            if ack.get("type") != "res" or not ack.get("ok"):
+                logger.warning("OpenClaw connect failed: %s", ack)
+                async for sse_line in _fallback_to_direct(info, messages, model, system_prompt):
+                    yield sse_line
+                return
+
+            # Step 3: Send the user's latest message
+            last_user_msg = ""
+            for m in reversed(messages):
+                if m.get("role") == "user":
+                    last_user_msg = m.get("content", "")
+                    break
+
+            await ws.send(json.dumps({
+                "type": "event",
+                "event": "chat.send",
+                "payload": {
+                    "text": last_user_msg,
+                    "session": "main",
+                }
+            }))
+
+            # Step 4: Stream events until done
             async for raw in ws:
                 event = json.loads(raw)
-                sse = _map_openhands_event(event)
+                sse = _map_openclaw_event(event)
                 if sse:
                     yield f"data: {sse.model_dump_json()}\n\n"
 
-    except (websockets.exceptions.WebSocketException, OSError, TimeoutError) as e:
+                etype = event.get("event", event.get("type", ""))
+                if etype in ("agent.done", "chat.done", "done"):
+                    break
+
+    except (
+        websockets.exceptions.WebSocketException,
+        OSError,
+        TimeoutError,
+        _asyncio.TimeoutError,
+    ) as e:
         logger.warning(
-            "WebSocket connection to sandbox %s failed (%s), falling back to direct tool loop",
+            "WebSocket to sandbox %s failed (%s), falling back to direct tool loop",
             info.sandbox_id, e,
         )
-        # Fallback: run the tool-calling loop server-side (works without custom image)
-        async for sse_line in stream_chat_with_tools(
-            messages=messages,
-            model=model,
-            tools=get_tool_schemas(),
-            tool_executor=execute_tool,
-            conversation_id=info.conversation_id,
-            user_id=info.user_id,
-            system_prompt=system_prompt,
-        ):
+        async for sse_line in _fallback_to_direct(info, messages, model, system_prompt):
             yield sse_line
 
 
-def _map_openhands_event(event: dict) -> SSEEvent | None:
-    """Translate an OpenHands WebSocket event to our SSEEvent schema.
+async def _fallback_to_direct(
+    info, messages: list[dict], model: str, system_prompt: str
+) -> AsyncGenerator[str, None]:
+    """Fall back to server-side tool calling when WebSocket fails."""
+    async for sse_line in stream_chat_with_tools(
+        messages=messages,
+        model=model,
+        tools=get_tool_schemas(),
+        tool_executor=execute_tool,
+        conversation_id=info.conversation_id,
+        user_id=info.user_id,
+        system_prompt=system_prompt,
+    ):
+        yield sse_line
 
-    OpenHands emits events with a ``type`` field. We map the subset we care
-    about; unknown event types are silently dropped.
+
+def _map_openclaw_event(event: dict) -> SSEEvent | None:
+    """Translate an OpenClaw Gateway WebSocket event to our SSEEvent schema.
+
+    OpenClaw emits events with an "event" field (e.g., "chat.message",
+    "agent.thinking", "agent.tool_start") and a "payload" dict.
     """
-    etype = event.get("type", "")
+    etype = event.get("event", event.get("type", ""))
+    payload = event.get("payload", event)
 
-    if etype == "message":
-        # Streaming text token from the agent
-        return SSEEvent(type=SSEEventType.token, content=event.get("content", ""))
+    # Text streaming
+    if etype in ("chat.message", "message", "agent.message"):
+        content = payload.get("text", payload.get("content", ""))
+        if content:
+            return SSEEvent(type=SSEEventType.token, content=content)
 
-    if etype == "action" and event.get("action") == "run":
-        # Agent is about to execute code / a tool
+    # Agent thinking / streaming tokens
+    if etype in ("agent.thinking", "agent.stream", "thinking"):
+        content = payload.get("text", payload.get("content", ""))
+        if content:
+            return SSEEvent(type=SSEEventType.token, content=content)
+
+    # Tool start
+    if etype in ("agent.tool_start", "action", "tool_start"):
+        tool_name = payload.get(
+            "tool", payload.get("action", payload.get("name", "unknown"))
+        )
         return SSEEvent(
             type=SSEEventType.tool_start,
-            tool=event.get("tool", "code_execute"),
-            input=event.get("args", {}),
+            tool=tool_name,
+            input=payload.get("args", payload.get("input", {})),
         )
 
-    if etype == "observation":
-        # Result from a tool execution
+    # Tool result / observation
+    if etype in ("agent.tool_result", "observation", "tool_result"):
+        tool_name = payload.get("tool", payload.get("name", "unknown"))
+        output = str(
+            payload.get("output", payload.get("content", payload.get("result", "")))
+        )
         return SSEEvent(
             type=SSEEventType.tool_result,
-            tool=event.get("tool", "code_execute"),
-            output=str(event.get("content", "")),
+            tool=tool_name,
+            output=output[:2000],
         )
 
-    if etype == "error":
-        return SSEEvent(type=SSEEventType.error, error=event.get("message", "Unknown error"))
+    # File created
+    if etype in ("file.created", "file_created", "file"):
+        return SSEEvent(
+            type=SSEEventType.file,
+            filename=payload.get("filename", payload.get("name", "")),
+            url=payload.get("url", ""),
+            size=payload.get("size", 0),
+        )
 
-    if etype == "done":
-        return SSEEvent(type=SSEEventType.done)
+    # Error
+    if etype in ("error", "agent.error"):
+        return SSEEvent(
+            type=SSEEventType.error,
+            error=payload.get("message", payload.get("error", str(payload))),
+        )
+
+    # Done
+    if etype in ("agent.done", "chat.done", "done"):
+        return SSEEvent(
+            type=SSEEventType.done,
+            total_tokens=payload.get("total_tokens", 0),
+            credits_used=payload.get("credits_used", 0),
+        )
 
     return None
