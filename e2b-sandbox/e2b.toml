@@ -1,8 +1,0 @@
-# This is a config for E2B sandbox template
-id = "openclaw-agent"
-dockerfile = "e2b.Dockerfile"
-name = "OpenClaw Agent Sandbox"
-
-[resources]
-cpu_count = 2
-memory_mb = 1024

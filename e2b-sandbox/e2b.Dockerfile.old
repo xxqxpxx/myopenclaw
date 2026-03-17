@@ -1,5 +1,5 @@
 # E2B OpenClaw Agent Sandbox Template
-FROM e2b/code-interpreter:latest
+FROM e2bdev/code-interpreter:latest
 
 # Install Node.js 22
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && \

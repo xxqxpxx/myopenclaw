@@ -1,0 +1,18 @@
+# This is a config for E2B sandbox template.
+# You can use template ID (cnyq8xg4asd0hkfq1h40) or template name (openclaw-agent) to create a sandbox:
+
+# Python SDK
+# from e2b import Sandbox, AsyncSandbox
+# sandbox = Sandbox.create("openclaw-agent") # Sync sandbox
+# sandbox = await AsyncSandbox.create("openclaw-agent") # Async sandbox
+
+# JS SDK
+# import { Sandbox } from 'e2b'
+# const sandbox = await Sandbox.create('openclaw-agent')
+
+team_id = "81905ae2-eb81-46e0-983e-cd6968b543f2"
+memory_mb = 1_024
+cpu_count = 2
+dockerfile = "e2b.Dockerfile"
+template_name = "openclaw-agent"
+template_id = "cnyq8xg4asd0hkfq1h40"
