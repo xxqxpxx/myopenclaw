@@ -174,6 +174,15 @@ export async function getCredits(): Promise<{
   return apiFetch("/users/me/credits");
 }
 
+export async function provisionUser(): Promise<{
+  status: string;
+  conversation_id: string;
+  credits_balance: number;
+  sandbox?: string;
+}> {
+  return apiFetch("/users/me/provision", { method: "POST" });
+}
+
 // ── Billing ────────────────────────────────────────────────────────────
 
 export async function createCheckout(

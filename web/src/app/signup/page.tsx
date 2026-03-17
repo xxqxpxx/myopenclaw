@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+import { provisionUser } from "@/lib/api";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -23,7 +24,14 @@ export default function SignupPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      // Provision user: create profile, first conversation, and warm sandbox
+      try {
+        const result = await provisionUser();
+        router.push(`/chat/${result.conversation_id}`);
+      } catch {
+        // Provisioning failed but signup succeeded — go to dashboard
+        router.push("/");
+      }
     }
   }
 
