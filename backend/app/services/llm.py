@@ -152,7 +152,7 @@ async def stream_chat_with_tools(
         try:
             async with client.messages.stream(
                 model=model,
-                max_tokens=8192,
+                max_tokens=4096,
                 system=system_prompt,
                 messages=current_messages,
                 tools=tools,

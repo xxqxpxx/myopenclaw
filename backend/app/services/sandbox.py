@@ -12,7 +12,7 @@ import time
 from dataclasses import dataclass, field
 from enum import Enum
 
-from e2b_code_interpreter import Sandbox
+from e2b import Sandbox
 
 from app.config import get_settings
 
@@ -127,11 +127,10 @@ class SandboxManager:
 
         template = settings.e2b_sandbox_template_id or "base"
         sandbox = await asyncio.to_thread(
-            Sandbox,
+            Sandbox.create,
             template=template,
-            api_key=settings.e2b_api_key,
-            env_vars=env_vars,
             timeout=300,  # 5 min keep-alive by default
+            envs=env_vars,
         )
 
         # Start the OpenClaw Gateway inside the sandbox
@@ -189,9 +188,8 @@ class SandboxManager:
         settings = get_settings()
         try:
             sandbox = await asyncio.to_thread(
-                Sandbox.reconnect,
+                Sandbox.connect,
                 info.sandbox_id,
-                api_key=settings.e2b_api_key,
             )
             info.sandbox = sandbox
             info.state = SandboxState.active

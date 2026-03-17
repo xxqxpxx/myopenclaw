@@ -333,17 +333,21 @@ async def get_api_keys(user_id: str) -> list[dict]:
 async def get_api_key_encrypted(user_id: str, provider: str) -> str | None:
     """Fetch the encrypted key blob for a specific provider. Returns None if not set."""
     sb = get_supabase()
-    result = (
-        sb.table("api_keys")
-        .select("encrypted_key")
-        .eq("user_id", user_id)
-        .eq("provider", provider)
-        .eq("is_valid", True)
-        .maybe_single()
-        .execute()
-    )
-    if result.data:
-        return result.data["encrypted_key"]
+    try:
+        result = (
+            sb.table("api_keys")
+            .select("encrypted_key")
+            .eq("user_id", user_id)
+            .eq("provider", provider)
+            .eq("is_valid", True)
+            .maybe_single()
+            .execute()
+        )
+        data = _safe_data(result)
+        if data:
+            return data["encrypted_key"]
+    except Exception:
+        pass
     return None
 
 

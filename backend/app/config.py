@@ -62,7 +62,7 @@ class Settings(BaseSettings):
     sentry_dsn: str = ""
 
     # Model routing defaults
-    haiku_model: str = "claude-haiku-4-5-20250315"
+    haiku_model: str = "claude-3-haiku-20240307"
     sonnet_model: str = "claude-sonnet-4-20250514"
     opus_model: str = "claude-opus-4-20250514"
 
