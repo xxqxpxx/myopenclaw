@@ -22,7 +22,8 @@ class SubscriptionTier(str, Enum):
     free = "free"
     starter = "starter"
     pro = "pro"
-    beast = "beast"
+    power = "power"
+    byok = "byok"
 
 
 class SSEEventType(str, Enum):

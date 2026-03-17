@@ -6,13 +6,13 @@ import logging
 from datetime import datetime
 
 import stripe
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from app.auth.jwt import AuthenticatedUser, get_current_user
 from app.config import get_settings
 from app.db import supabase as db
-from app.services.tiers import TIERS, get_tier
+from app.services.tiers import get_tier
 
 router = APIRouter(prefix="/billing", tags=["billing"])
 logger = logging.getLogger(__name__)
@@ -37,8 +37,8 @@ def _init_stripe():
 
 class CheckoutRequest(BaseModel):
     tier: str
-    success_url: str = "http://localhost:3000/settings?billing=success"
-    cancel_url: str = "http://localhost:3000/settings?billing=cancel"
+    success_url: str = "https://myopenclaw.vercel.app/settings?billing=success"
+    cancel_url: str = "https://myopenclaw.vercel.app/settings?billing=cancel"
 
 
 class SubscriptionResponse(BaseModel):
@@ -50,8 +50,8 @@ class SubscriptionResponse(BaseModel):
 
 
 class TopUpRequest(BaseModel):
-    success_url: str = "http://localhost:3000/settings?topup=success"
-    cancel_url: str = "http://localhost:3000/settings?topup=cancel"
+    success_url: str = "https://myopenclaw.vercel.app/settings?topup=success"
+    cancel_url: str = "https://myopenclaw.vercel.app/settings?topup=cancel"
 
 
 # ── Endpoints ──────────────────────────────────────────────────────────────
@@ -166,7 +166,7 @@ async def create_portal(user: AuthenticatedUser = Depends(get_current_user)):
 
     session = stripe.billing_portal.Session.create(
         customer=sub["stripe_customer_id"],
-        return_url="http://localhost:3000/settings",
+        return_url="https://myopenclaw.vercel.app/settings",
     )
     return {"portal_url": session.url}
 
@@ -199,7 +199,7 @@ async def stripe_webhook(request: Request):
         await _handle_subscription_updated(data)
     elif event_type == "customer.subscription.deleted":
         await _handle_subscription_deleted(data)
-    elif event_type == "invoice.paid":
+    elif event_type == "invoice.payment_succeeded":
         await _handle_invoice_paid(data)
 
     return {"status": "ok"}
@@ -213,10 +213,10 @@ async def _handle_checkout_completed(session: dict):
 
     # One-time top-up
     if metadata.get("type") == "topup":
-        await db.add_credits(user_id, 1000)
+        await db.add_credits(user_id, 500)
         await db.log_credit_purchase(
             user_id=user_id,
-            amount=1000,
+            amount=500,
             price_usd=4.99,
             source="stripe",
             payment_id=session.get("payment_intent"),
@@ -244,7 +244,7 @@ async def _handle_subscription_updated(subscription: dict):
     if not sub:
         return
 
-    status = subscription.get("status", "active")
+    sub_status = subscription.get("status", "active")
     status_map = {
         "active": "active",
         "past_due": "past_due",
@@ -253,7 +253,7 @@ async def _handle_subscription_updated(subscription: dict):
     }
     await db.upsert_subscription(
         sub["user_id"],
-        status=status_map.get(status, "active"),
+        status=status_map.get(sub_status, "active"),
         stripe_subscription_id=subscription.get("id"),
     )
 
