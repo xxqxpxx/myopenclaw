@@ -9,7 +9,7 @@ As a user, I want the app to remember my login session so that I don't have to e
 
 ## User Story
 
-**As a** SignalWhisper user
+**As a** myOpenClaw user
 **I want** the app to remember my login session
 **So that** I can quickly access the app without re-entering my credentials each time
 
@@ -145,8 +145,8 @@ As a user, I want the app to remember my login session so that I don't have to e
 
 ## Related Files
 
-- `composeApp/src/commonMain/kotlin/com/signalwhisper/data/local/PreferencesManager.kt`
-- `composeApp/src/commonMain/kotlin/com/signalwhisper/data/auth/AuthManager.kt`
-- `composeApp/src/commonMain/kotlin/com/signalwhisper/ui/viewmodel/auth/SignInViewModel.kt`
-- `composeApp/src/commonMain/kotlin/com/signalwhisper/App.kt`
-- `composeApp/src/commonMain/kotlin/com/signalwhisper/ui/navigation/NavGraph.kt`
+- `composeApp/src/commonMain/kotlin/com/myopenclaw/data/local/PreferencesManager.kt`
+- `composeApp/src/commonMain/kotlin/com/myopenclaw/data/auth/AuthManager.kt`
+- `composeApp/src/commonMain/kotlin/com/myopenclaw/ui/viewmodel/auth/SignInViewModel.kt`
+- `composeApp/src/commonMain/kotlin/com/myopenclaw/App.kt`
+- `composeApp/src/commonMain/kotlin/com/myopenclaw/ui/navigation/NavGraph.kt`

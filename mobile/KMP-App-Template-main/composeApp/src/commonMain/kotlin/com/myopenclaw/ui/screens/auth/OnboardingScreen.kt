@@ -76,7 +76,7 @@ fun OnboardingScreen(
 
             // Main Title
             Text(
-                text = "Signalwhisper:\nInstant and Smarter Trade Analysis with AI",
+                text = "my openClaw:\nInstant and Smarter Trade Analysis with AI",
                 style = TextStyle(
                     fontSize = responsiveDimensions.titleFontSize,
                     lineHeight = responsiveDimensions.titleLineHeight,

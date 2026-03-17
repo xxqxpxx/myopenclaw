@@ -47,8 +47,8 @@ jobs:
         id: build_apk
         run: |
           echo "Building debug APK for Maestro testing..."
-          ./gradlew :composeApp:assembleSignalwhisperDebug --stacktrace
-          APK_PATH=$(find composeApp/build/outputs/apk/signalwhisper/debug -name '*.apk' | head -1)
+          ./gradlew :composeApp:assembleMyopenclawDebug --stacktrace
+          APK_PATH=$(find composeApp/build/outputs/apk/myopenclaw/debug -name '*.apk' | head -1)
           echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
           echo "Debug APK built: $APK_PATH"
 

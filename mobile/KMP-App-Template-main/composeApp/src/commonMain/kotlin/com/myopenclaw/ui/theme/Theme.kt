@@ -39,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 /**
- * Main app theme - works with both Signal Whisper and Profit AI Pro variants.
+ * Main app theme - works with both my openClaw and Profit AI Pro variants.
  * Colors are defined in Color.kt and can be overridden per flavor using BrandConfig.
  */
 @Composable

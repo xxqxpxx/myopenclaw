@@ -64,7 +64,7 @@ fun SignUpScreen(
 
             // Title
             Text(
-                text = "Signalwhisper:",
+                text = "my openClaw:",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 32.sp
                 ),

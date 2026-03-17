@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Brand configuration for Profit AI Pro variant
- * Uses same colors as Signal Whisper, only app name differs
+ * Uses same colors as my openClaw, only app name differs
  */
 object BrandConfig {
     const val APP_NAME = "Profit AI Pro"

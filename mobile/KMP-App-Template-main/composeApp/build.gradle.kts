@@ -108,9 +108,9 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
 
-            // Supabase (KMP)
-            implementation(libs.supabase.core)
-            implementation(libs.supabase.gotrue.kt)
+            // Supabase (KMP) - TODO: Add back when implementation is complete
+            // implementation(libs.supabase.core)
+            // implementation(libs.supabase.gotrue.kt)
 
             // RevenueCat (KMP)
             implementation(libs.revenuecat.purchases.kmp)
@@ -194,8 +194,8 @@ android {
     // Configure source sets for product flavors
     sourceSets {
         getByName("myopenclaw") {
-            kotlin.srcDirs("src/signalwhisper/kotlin")
-            res.srcDirs("src/signalwhisper/res")
+            kotlin.srcDirs("src/myopenclaw/kotlin")
+            res.srcDirs("src/myopenclaw/res")
         }
         /*
         getByName("profitai") {

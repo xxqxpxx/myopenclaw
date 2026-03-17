@@ -403,7 +403,7 @@ fun SettingsScreen(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "Signalwhisper",
+                                text = "my openClaw",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -414,7 +414,7 @@ fun SettingsScreen(
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                             )
                             Text(
-                                text = "© 2024 Signalwhisper Inc.",
+                                text = "© 2024 myOpenClaw",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                             )

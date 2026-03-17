@@ -45,7 +45,7 @@ jobs:
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > composeApp/keyz.jks
 
       - name: Build Debug APK
-        run: ./gradlew :composeApp:assembleSignalwhisperDebug --stacktrace
+        run: ./gradlew :composeApp:assembleMyopenclawDebug --stacktrace
 
       - name: Build Release APK
         id: build_release
@@ -54,19 +54,19 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew :composeApp:assembleSignalwhisperRelease --stacktrace
+        run: ./gradlew :composeApp:assembleMyopenclawRelease --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: signalwhisper-debug
-          path: composeApp/build/outputs/apk/signalwhisper/debug/*.apk
+          name: myopenclaw-debug
+          path: composeApp/build/outputs/apk/myopenclaw/debug/*.apk
           retention-days: 14
 
       - name: Upload Release APK
         if: steps.build_release.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: signalwhisper-release
-          path: composeApp/build/outputs/apk/signalwhisper/release/*.apk
+          name: myopenclaw-release
+          path: composeApp/build/outputs/apk/myopenclaw/release/*.apk
           retention-days: 14

@@ -7,11 +7,11 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Signal Whisper</string>
+	<string>my openClaw</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.signalwhisper</string>
+	<string>com.myopenclaw</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -44,9 +44,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Signal Whisper needs access to your camera to capture trading charts for AI analysis.</string>
+	<string>my openClaw needs access to your camera to capture trading charts for AI analysis.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Signal Whisper needs access to your photo library to select trading chart images for AI analysis.</string>
+	<string>my openClaw needs access to your photo library to select trading chart images for AI analysis.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -1,7 +1,7 @@
 # Home Screen Implementation
 
 ## Overview
-Pixel-perfect implementation of the SignalWhisper home/dashboard screen matching Figma designs exactly.
+Pixel-perfect implementation of the my openClaw home/dashboard screen matching Figma designs exactly.
 
 ## Files
 - `HomeScreenNew.kt` - Main home screen implementation with both states
@@ -27,7 +27,7 @@ The screen supports two states controlled by the `hasTradeAnalysis` parameter:
 
 #### 1. HomeHeader
 - App icon (40dp x 40dp, rounded 12dp, Green2 background)
-- App name "Signalwhisper" (16sp SemiBold)
+- App name "my openClaw" (16sp SemiBold)
 - Pro badge (dark background, white text, 10sp)
 - Currency/Language selector (56dp height, flag icon, dropdown)
 
@@ -211,7 +211,7 @@ All navigation is handled via callbacks. The parent composable should provide na
 ## Customization
 
 ### Changing Colors
-Update the theme colors in `com.signalwhisper.ui.theme.Color.kt`:
+Update the theme colors in `com.myopenclaw.ui.theme.Color.kt`:
 ```kotlin
 val Dark1 = Color(0xFF0D1023)
 val Green2 = Color(0xFF30CD8F)

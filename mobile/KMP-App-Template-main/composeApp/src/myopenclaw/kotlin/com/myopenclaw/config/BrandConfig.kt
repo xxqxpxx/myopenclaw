@@ -3,10 +3,10 @@ package com.myopenclaw.config
 import androidx.compose.ui.graphics.Color
 
 /**
- * Brand configuration for Signal Whisper variant
+ * Brand configuration for my openClaw variant
  */
 object BrandConfig {
-    const val APP_NAME = "Signal Whisper"
+    const val APP_NAME = "my openClaw"
     const val FLAVOR = "myopenclaw"
 
     // Primary Colors - Green/Teal Accent

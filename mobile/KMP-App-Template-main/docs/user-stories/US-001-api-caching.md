@@ -9,7 +9,7 @@
 
 ## User Story
 
-**As a** SignalWhisper user,
+**As a** myOpenClaw user,
 **I want** the app to show my market data instantly when I open it,
 **So that** I can quickly view my trading signals and market intelligence without waiting for network requests.
 
@@ -386,7 +386,7 @@ CREATE INDEX idx_cache_metadata_expires ON cache_metadata(expires_at);
 
 #### New Package Structure
 ```
-composeApp/src/commonMain/kotlin/com/signalwhisper/
+composeApp/src/commonMain/kotlin/com/myopenclaw/
 ├── data/
 │   ├── local/
 │   │   ├── cache/
@@ -557,9 +557,9 @@ expect class DatabaseDriverFactory {
 actual class DatabaseDriverFactory(private val context: Context) {
     actual fun createDriver(): SqlDriver {
         return AndroidSqliteDriver(
-            schema = SignalWhisperDatabase.Schema,
+            schema = myOpenClawDatabase.Schema,
             context = context,
-            name = "signalwhisper.db"
+            name = "myopenclaw.db"
         )
     }
 }
@@ -568,8 +568,8 @@ actual class DatabaseDriverFactory(private val context: Context) {
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
         return NativeSqliteDriver(
-            schema = SignalWhisperDatabase.Schema,
-            name = "signalwhisper.db"
+            schema = myOpenClawDatabase.Schema,
+            name = "myopenclaw.db"
         )
     }
 }
@@ -583,7 +583,7 @@ actual class DatabaseDriverFactory {
 
 - [ ] **1.1** Add SQLDelight dependencies to `build.gradle.kts`
 - [ ] **1.2** Configure SQLDelight plugin and database schema location
-- [ ] **1.3** Create database schema file (`SignalWhisper.sq`)
+- [ ] **1.3** Create database schema file (`myOpenClaw.sq`)
 - [ ] **1.4** Implement `DatabaseDriverFactory` for Android
 - [ ] **1.5** Implement `DatabaseDriverFactory` for iOS
 - [ ] **1.6** Create `CachePolicy` configuration object

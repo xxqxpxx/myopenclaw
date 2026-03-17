@@ -1,15 +1,15 @@
-# ProGuard/R8 rules for SignalWhisper
+# ProGuard/R8 rules for MyOpenClaw
 
 # --- Kotlin Serialization ---
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
 -keepclassmembers class kotlinx.serialization.json.** { *** Companion; }
 -keepclasseswithmembers class kotlinx.serialization.json.** { kotlinx.serialization.KSerializer serializer(...); }
--keep,includedescriptorclasses class com.signalwhisper.**$$serializer { *; }
--keepclassmembers class com.signalwhisper.** { *** Companion; }
--keepclasseswithmembers class com.signalwhisper.** { kotlinx.serialization.KSerializer serializer(...); }
--keep class com.signalwhisper.domain.models.** { *; }
--keep class com.signalwhisper.data.remote.** { *; }
+-keep,includedescriptorclasses class com.myopenclaw.**$$serializer { *; }
+-keepclassmembers class com.myopenclaw.** { *** Companion; }
+-keepclasseswithmembers class com.myopenclaw.** { kotlinx.serialization.KSerializer serializer(...); }
+-keep class com.myopenclaw.domain.models.** { *; }
+-keep class com.myopenclaw.data.remote.** { *; }
 
 # Keep all @Serializable classes
 -if @kotlinx.serialization.Serializable class **

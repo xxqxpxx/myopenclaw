@@ -1,5 +1,5 @@
 {
-  "identifier" : "com.signalwhisper.products",
+  "identifier" : "com.myopenclaw.products",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -7,7 +7,7 @@
 
   ],
   "settings" : {
-    "_applicationInternalID" : "signalwhisper",
+    "_applicationInternalID" : "myopenclaw",
     "_developerTeamID" : "",
     "_failTransactionsEnabled" : false,
     "_locale" : "en_US",
@@ -62,11 +62,11 @@
   },
   "subscriptionGroups" : [
     {
-      "id" : "signalwhisper_pro",
+      "id" : "myopenclaw_pro",
       "localizations" : [
 
       ],
-      "name" : "Signal Whisper Pro",
+      "name" : "my openClaw Pro",
       "subscriptions" : [
         {
           "adHocOffers" : [
@@ -78,7 +78,7 @@
           "displayPrice" : "4.99",
           "familyShareable" : false,
           "groupNumber" : 1,
-          "internalID" : "com.signalwhisper.weekly",
+          "internalID" : "com.myopenclaw.weekly",
           "introductoryOffer" : null,
           "localizations" : [
             {
@@ -87,10 +87,10 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.signalwhisper.weekly",
+          "productID" : "com.myopenclaw.weekly",
           "recurringSubscriptionPeriod" : "P1W",
           "referenceName" : "Weekly Subscription",
-          "subscriptionGroupID" : "signalwhisper_pro",
+          "subscriptionGroupID" : "myopenclaw_pro",
           "type" : "RecurringSubscription"
         },
         {
@@ -103,7 +103,7 @@
           "displayPrice" : "14.99",
           "familyShareable" : false,
           "groupNumber" : 2,
-          "internalID" : "com.signalwhisper.monthly",
+          "internalID" : "com.myopenclaw.monthly",
           "introductoryOffer" : null,
           "localizations" : [
             {
@@ -112,10 +112,10 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.signalwhisper.monthly",
+          "productID" : "com.myopenclaw.monthly",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly Subscription",
-          "subscriptionGroupID" : "signalwhisper_pro",
+          "subscriptionGroupID" : "myopenclaw_pro",
           "type" : "RecurringSubscription"
         },
         {
@@ -128,7 +128,7 @@
           "displayPrice" : "99.99",
           "familyShareable" : false,
           "groupNumber" : 3,
-          "internalID" : "com.signalwhisper.yearly",
+          "internalID" : "com.myopenclaw.yearly",
           "introductoryOffer" : null,
           "localizations" : [
             {
@@ -137,10 +137,10 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.signalwhisper.yearly",
+          "productID" : "com.myopenclaw.yearly",
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Yearly Subscription",
-          "subscriptionGroupID" : "signalwhisper_pro",
+          "subscriptionGroupID" : "myopenclaw_pro",
           "type" : "RecurringSubscription"
         }
       ]

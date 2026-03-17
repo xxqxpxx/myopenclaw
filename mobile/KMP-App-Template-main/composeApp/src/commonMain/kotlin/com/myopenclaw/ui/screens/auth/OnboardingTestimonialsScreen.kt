@@ -76,7 +76,7 @@ fun OnboardingTestimonialsScreen(
 
             // Header
             Text(
-                text = "Thanks for trusting Signalwhisper",
+                text = "Thanks for trusting my openClaw",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
