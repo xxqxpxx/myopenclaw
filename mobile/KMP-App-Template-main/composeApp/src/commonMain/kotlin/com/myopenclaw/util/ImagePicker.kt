@@ -11,7 +11,7 @@ data class ImagePickerResult(
 
 /**
  * Platform-specific image picker for camera and gallery access
- * Used for chart analysis feature
+ * Used for image upload feature
  */
 expect class ImagePicker {
     /**

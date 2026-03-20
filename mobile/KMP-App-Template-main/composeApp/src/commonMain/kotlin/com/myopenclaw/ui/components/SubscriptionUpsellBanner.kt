@@ -6,7 +6,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.TrendingUp
+import androidx.compose.material.icons.filled.Rocket
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,8 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.myopenclaw.ui.theme.*
 
 /**
- * Upsell banner displayed when user's trial period for market signals has expired.
- * Encourages subscription to unlock access to market signals.
+ * Upsell banner displayed when user needs to upgrade for more credits or features.
  */
 @Composable
 fun SubscriptionUpsellBanner(
@@ -48,7 +47,6 @@ fun SubscriptionUpsellBanner(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Lock icon in circle
             Box(
                 modifier = Modifier
                     .size(64.dp)
@@ -73,9 +71,8 @@ fun SubscriptionUpsellBanner(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Title
             Text(
-                text = "Unlock Daily Market Signals",
+                text = "Unlock Unlimited AI Coding",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = White,
@@ -84,9 +81,8 @@ fun SubscriptionUpsellBanner(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Subtitle
             Text(
-                text = "Get real-time BUY, SELL, HOLD recommendations\npowered by AI analysis",
+                text = "Get unlimited credits, code execution,\nand priority AI responses",
                 fontSize = 14.sp,
                 color = White.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center,
@@ -95,22 +91,20 @@ fun SubscriptionUpsellBanner(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Features list
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                FeatureChip(text = "Crypto")
+                FeatureChip(text = "Code Exec")
                 Spacer(modifier = Modifier.width(8.dp))
-                FeatureChip(text = "Stocks")
+                FeatureChip(text = "Web Search")
                 Spacer(modifier = Modifier.width(8.dp))
-                FeatureChip(text = "Forex")
+                FeatureChip(text = "File Gen")
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Subscribe button
             Button(
                 onClick = onSubscribeClick,
                 modifier = Modifier
@@ -122,13 +116,13 @@ fun SubscriptionUpsellBanner(
                 shape = RoundedCornerShape(24.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.TrendingUp,
+                    imageVector = Icons.Default.Rocket,
                     contentDescription = null,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Subscribe Now",
+                    text = "Upgrade Now",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = White
@@ -137,9 +131,8 @@ fun SubscriptionUpsellBanner(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Trial info
             Text(
-                text = "Your free trial has ended",
+                text = "Free credits used up",
                 fontSize = 12.sp,
                 color = White.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center
@@ -185,7 +178,6 @@ fun CompactSubscriptionUpsellBanner(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Lock icon
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -207,13 +199,13 @@ fun CompactSubscriptionUpsellBanner(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Market Signals Locked",
+                    text = "Credits Running Low",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = White
                 )
                 Text(
-                    text = "Subscribe to unlock daily signals",
+                    text = "Upgrade for unlimited AI assistance",
                     fontSize = 12.sp,
                     color = White.copy(alpha = 0.6f)
                 )
@@ -228,7 +220,7 @@ fun CompactSubscriptionUpsellBanner(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
-                    text = "Unlock",
+                    text = "Upgrade",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = White

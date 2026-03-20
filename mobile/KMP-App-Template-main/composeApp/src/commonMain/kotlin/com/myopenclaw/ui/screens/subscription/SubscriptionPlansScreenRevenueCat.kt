@@ -187,9 +187,9 @@ fun SubscriptionPlansScreenRevenueCat(
                             package_ = pkg,
                             title = "Weekly Plan",
                             features = listOf(
-                                "Real-time insider trading alerts",
-                                "Congressional trading insights",
-                                "Basic AI trade ideas",
+                                "AI coding assistance",
+                                "Basic code execution",
+                                "Web search integration",
                                 "Email support"
                             ),
                             isSelected = selectedPackageId == pkg.identifier,
@@ -208,10 +208,10 @@ fun SubscriptionPlansScreenRevenueCat(
                             features = listOf(
                                 "All Weekly features",
                                 "Advanced AI analysis",
-                                "Chart analysis tool",
-                                "Market impact predictions",
+                                "AI code assistant",
+                                "Code execution sandbox",
                                 "Priority support",
-                                "Options flow data"
+                                "File generation"
                             ),
                             isSelected = selectedPackageId == pkg.identifier,
                             isRecommended = true,

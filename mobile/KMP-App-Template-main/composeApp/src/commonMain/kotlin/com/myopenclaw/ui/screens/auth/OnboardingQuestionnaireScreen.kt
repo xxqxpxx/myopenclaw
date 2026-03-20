@@ -41,79 +41,79 @@ fun OnboardingQuestionnaireScreen(
         listOf(
             OnboardingQuestion(
                 id = 0,
-                question = "What's your biggest challenge in trading right now $userName?",
+                question = "What's your biggest coding challenge right now, $userName?",
                 options = listOf(
-                    "Missing profitable opportunities",
-                    "Not understanding charts",
-                    "Making emotional decisions",
-                    "Timing entries and exits",
-                    "Just too overwhelming"
+                    "Debugging complex errors",
+                    "Writing clean, maintainable code",
+                    "Learning new frameworks",
+                    "Building projects from scratch",
+                    "Understanding existing codebases"
                 )
             ),
             OnboardingQuestion(
                 id = 1,
-                question = "Be honest: How confident are you when placing a trade $userName?",
+                question = "How confident are you writing code, $userName?",
                 options = listOf(
-                    "Very confident",
-                    "Somewhat confident",
-                    "Guessing most of the time",
-                    "Scared I'll lose money",
-                    "Following others blindly"
+                    "Very confident — ship daily",
+                    "Comfortable with most tasks",
+                    "Still learning the basics",
+                    "I can read code but writing is hard",
+                    "Complete beginner"
                 )
             ),
             OnboardingQuestion(
                 id = 2,
-                question = "How much time do you spend analysing before each trade",
+                question = "How do you typically solve coding problems?",
                 options = listOf(
-                    "Hours (still unsure)",
-                    "30-60 minutes",
-                    "Quick 5-minute check",
-                    "I don't analyze much",
-                    "I follow signals/tips"
+                    "Search Stack Overflow for hours",
+                    "Read documentation thoroughly",
+                    "Ask colleagues or mentors",
+                    "Trial and error until it works",
+                    "Use AI assistants"
                 )
             ),
             OnboardingQuestion(
                 id = 3,
-                question = "When staring at a chart, what goes through your mind",
+                question = "What frustrates you most when coding?",
                 options = listOf(
-                    "Is this the right moment?",
-                    "What if I'm wrong?",
-                    "I have no idea what this means",
-                    "Should I wait longer?",
-                    "I need expert confirmation"
+                    "Cryptic error messages",
+                    "Setting up dev environments",
+                    "Writing boilerplate code",
+                    "Not knowing the best approach",
+                    "Testing and debugging"
                 )
             ),
             OnboardingQuestion(
                 id = 4,
-                question = "If you could wave a magic wand, what would help most?",
+                question = "What would help you the most?",
                 options = listOf(
-                    "Clear buy/sell signals",
-                    "Instant chart analysis",
-                    "Expert guidance anytime",
-                    "Understanding patterns better",
+                    "Instant code generation",
+                    "Smart debugging assistance",
+                    "Code explanations and reviews",
+                    "Learning new concepts hands-on",
                     "All of the above"
                 )
             ),
             OnboardingQuestion(
                 id = 5,
-                question = "What type of trader are you?",
+                question = "What describes you best?",
                 options = listOf(
-                    "Day Trader",
-                    "Swing Trader",
-                    "Long-term Investor",
-                    "Crypto Trader",
-                    "Just getting started"
+                    "Professional developer",
+                    "Student / Learner",
+                    "Hobbyist / Side projects",
+                    "Tech lead / Architect",
+                    "Career switcher"
                 )
             ),
             OnboardingQuestion(
                 id = 6,
-                question = "Which assets do you trade most",
+                question = "Which languages do you work with most?",
                 options = listOf(
-                    "Stocks",
-                    "Crypto",
-                    "Forex",
-                    "Commodities",
-                    "Indices"
+                    "Python",
+                    "JavaScript / TypeScript",
+                    "Java / Kotlin",
+                    "C / C++ / Rust",
+                    "Multiple languages"
                 )
             )
         )
@@ -122,7 +122,6 @@ fun OnboardingQuestionnaireScreen(
     val currentQuestion = questions[currentStep]
     var selectedOption by remember(currentStep) { mutableStateOf<String?>(null) }
 
-    // Load existing answer when changing steps
     LaunchedEffect(currentStep) {
         selectedOption = when (currentStep) {
             0 -> selectedAnswers.biggestChallenge.takeIf { it.isNotEmpty() }
@@ -147,7 +146,6 @@ fun OnboardingQuestionnaireScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Back Button
             Surface(
                 onClick = {
                     if (currentStep > 0) {
@@ -177,7 +175,6 @@ fun OnboardingQuestionnaireScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Progress Bar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -197,7 +194,6 @@ fun OnboardingQuestionnaireScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Question
             Text(
                 text = currentQuestion.question,
                 fontSize = 24.sp,
@@ -208,7 +204,6 @@ fun OnboardingQuestionnaireScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Options
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -226,11 +221,9 @@ fun OnboardingQuestionnaireScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Continue Button (Pill-shaped)
             Button(
                 onClick = {
                     selectedOption?.let { answer ->
-                        // Save answer
                         selectedAnswers = when (currentStep) {
                             0 -> selectedAnswers.copy(biggestChallenge = answer)
                             1 -> selectedAnswers.copy(confidenceLevel = answer)
@@ -242,7 +235,6 @@ fun OnboardingQuestionnaireScreen(
                             else -> selectedAnswers
                         }
 
-                        // Navigate to next step or complete
                         if (currentStep < questions.size - 1) {
                             currentStep++
                         } else {
@@ -311,13 +303,11 @@ fun OptionCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Radio button indicator with checkmark
             Box(
                 modifier = Modifier.size(24.dp),
                 contentAlignment = Alignment.Center
             ) {
                 if (isSelected) {
-                    // Green filled circle with checkmark
                     Surface(
                         modifier = Modifier.size(24.dp),
                         shape = androidx.compose.foundation.shape.CircleShape,
@@ -336,7 +326,6 @@ fun OptionCard(
                         }
                     }
                 } else {
-                    // Empty circle outline
                     Surface(
                         modifier = Modifier.size(24.dp),
                         shape = androidx.compose.foundation.shape.CircleShape,

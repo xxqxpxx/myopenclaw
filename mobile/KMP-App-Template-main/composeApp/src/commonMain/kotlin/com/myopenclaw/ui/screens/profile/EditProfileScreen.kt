@@ -21,19 +21,19 @@ fun EditProfileScreen(
     onNavigateBack: () -> Unit = {},
     onSaveProfile: () -> Unit = {}
 ) {
-    var name by remember { mutableStateOf("John Trader") }
-    var email by remember { mutableStateOf("john.trader@example.com") }
+    var name by remember { mutableStateOf("John Developer") }
+    var email by remember { mutableStateOf("john.dev@example.com") }
     var phone by remember { mutableStateOf("+1 (555) 123-4567") }
-    var bio by remember { mutableStateOf("Professional trader with 5+ years of experience in options and equity trading.") }
+    var bio by remember { mutableStateOf("Full-stack developer with 5+ years of experience in web and mobile development.") }
     var isLoading by remember { mutableStateOf(false) }
     var showDiscardDialog by remember { mutableStateOf(false) }
 
     // Track if form has changes
     val hasChanges = remember(name, email, phone, bio) {
-        name != "John Trader" ||
-        email != "john.trader@example.com" ||
+        name != "John Developer" ||
+        email != "john.dev@example.com" ||
         phone != "+1 (555) 123-4567" ||
-        bio != "Professional trader with 5+ years of experience in options and equity trading."
+        bio != "Full-stack developer with 5+ years of experience in web and mobile development."
     }
 
     Scaffold(
@@ -303,8 +303,8 @@ fun EditProfileScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     TradingPreferenceItem(
-                        icon = Icons.Default.TrendingUp,
-                        title = "Trading Experience",
+                        icon = Icons.Default.Code,
+                        title = "Developer Level",
                         value = "Intermediate",
                         onClick = { /* Coming Soon: Experience selector */ }
                     )

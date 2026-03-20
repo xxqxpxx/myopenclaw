@@ -4,22 +4,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.myopenclaw.data.local.PreferencesManager
 import com.myopenclaw.ui.components.SWCard
 import com.myopenclaw.ui.theme.*
+import com.myopenclaw.ui.viewmodel.profile.ProfileState
+import com.myopenclaw.ui.viewmodel.profile.ProfileViewModel
 import com.myopenclaw.util.UrlLauncher
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
-// App URLs
 private object AppUrls {
     const val PRIVACY_POLICY = "https://myopenclaw.com/privacy"
     const val TERMS_OF_SERVICE = "https://myopenclaw.com/terms"
@@ -38,19 +40,80 @@ fun SettingsScreen(
     onNavigateToEditProfile: () -> Unit = {},
     onNavigateToSubscription: () -> Unit = {},
     onNavigateToChangePassword: () -> Unit = {},
+    onSignOut: () -> Unit = {},
+    onDeleteAccount: () -> Unit = {},
     urlLauncher: UrlLauncher = koinInject(),
-    preferencesManager: PreferencesManager = koinInject()
+    preferencesManager: PreferencesManager = koinInject(),
+    profileViewModel: ProfileViewModel = koinViewModel()
 ) {
+    val profileState by profileViewModel.profileState.collectAsState()
     var darkModeEnabled by remember { mutableStateOf(true) }
     var notificationsEnabled by remember { mutableStateOf(true) }
     var showLanguageDialog by remember { mutableStateOf(false) }
-    var biometricsEnabled by remember { mutableStateOf(false) }
     var showClearCacheDialog by remember { mutableStateOf(false) }
     var showLicensesDialog by remember { mutableStateOf(false) }
+    var showSignOutDialog by remember { mutableStateOf(false) }
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // Clear cache confirmation dialog
+    // Sign out confirmation
+    if (showSignOutDialog) {
+        AlertDialog(
+            onDismissRequest = { showSignOutDialog = false },
+            title = { Text("Sign Out") },
+            text = { Text("Are you sure you want to sign out?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showSignOutDialog = false
+                        profileViewModel.signOut(onSuccess = onSignOut)
+                    }
+                ) {
+                    Text("Sign Out", color = BearishRed)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSignOutDialog = false }) {
+                    Text("Cancel")
+                }
+            },
+            containerColor = SurfaceDark
+        )
+    }
+
+    // Delete account confirmation
+    if (showDeleteAccountDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteAccountDialog = false },
+            title = { Text("Delete Account") },
+            text = { Text("This action is permanent and cannot be undone. All your data will be deleted.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteAccountDialog = false
+                        val email = (profileState as? ProfileState.Success)?.profile?.email ?: ""
+                        profileViewModel.deleteAccount(
+                            reason = null,
+                            feedback = null,
+                            confirmEmail = email,
+                            onSuccess = onDeleteAccount
+                        )
+                    }
+                ) {
+                    Text("Delete", color = BearishRed)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteAccountDialog = false }) {
+                    Text("Cancel")
+                }
+            },
+            containerColor = SurfaceDark
+        )
+    }
+
+    // Clear cache confirmation
     if (showClearCacheDialog) {
         AlertDialog(
             onDismissRequest = { showClearCacheDialog = false },
@@ -109,15 +172,20 @@ fun SettingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        "Settings",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                    Column {
+                        Text(
+                            "Settings",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        // Show user email if available
+                        (profileState as? ProfileState.Success)?.profile?.let { profile ->
+                            Text(
+                                text = profile.email,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -157,7 +225,7 @@ fun SettingsScreen(
                     SettingsMenuItem(
                         icon = Icons.Default.WorkspacePremium,
                         title = "Subscription",
-                        subtitle = "Manage your premium subscription",
+                        subtitle = "Manage your plan and credits",
                         onClick = onNavigateToSubscription,
                         showBadge = true
                     )
@@ -200,53 +268,10 @@ fun SettingsScreen(
                     )
 
                     SettingsMenuItem(
-                        icon = Icons.Default.NotificationsActive,
-                        title = "Notification Settings",
-                        subtitle = "Customize notification preferences",
-                        onClick = onNavigateToNotifications
-                    )
-
-                    SettingsMenuItem(
                         icon = Icons.Default.Language,
                         title = "Language",
                         subtitle = "English (US)",
                         onClick = { showLanguageDialog = true }
-                    )
-                }
-            }
-
-            // Security Section
-            item {
-                Text(
-                    text = "Security",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Primary
-                )
-            }
-
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    SettingsSwitchItem(
-                        icon = Icons.Default.Fingerprint,
-                        title = "Biometric Authentication",
-                        subtitle = "Use fingerprint or face ID",
-                        checked = biometricsEnabled,
-                        onCheckedChange = { biometricsEnabled = it }
-                    )
-
-                    SettingsMenuItem(
-                        icon = Icons.Default.Security,
-                        title = "Privacy & Security",
-                        subtitle = "Manage your privacy settings",
-                        onClick = onNavigateToPrivacy
-                    )
-
-                    SettingsMenuItem(
-                        icon = Icons.Default.VerifiedUser,
-                        title = "Two-Factor Authentication",
-                        subtitle = "Add an extra layer of security",
-                        onClick = { /* Coming Soon: 2FA setup */ }
                     )
                 }
             }
@@ -263,28 +288,6 @@ fun SettingsScreen(
 
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    SettingsMenuItem(
-                        icon = Icons.Default.Storage,
-                        title = "Data Usage",
-                        subtitle = "Monitor app data consumption",
-                        onClick = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Data usage feature coming soon")
-                            }
-                        }
-                    )
-
-                    SettingsMenuItem(
-                        icon = Icons.Default.CloudDownload,
-                        title = "Download Settings",
-                        subtitle = "Manage offline data storage",
-                        onClick = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Download settings coming soon")
-                            }
-                        }
-                    )
-
                     SettingsMenuItem(
                         icon = Icons.Default.Delete,
                         title = "Clear Cache",
@@ -360,13 +363,6 @@ fun SettingsScreen(
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     SettingsMenuItem(
-                        icon = Icons.Default.Info,
-                        title = "About my openClaw",
-                        subtitle = "Learn more about us",
-                        onClick = onNavigateToAbout
-                    )
-
-                    SettingsMenuItem(
                         icon = Icons.Default.Policy,
                         title = "Privacy Policy",
                         subtitle = "How we protect your data",
@@ -389,6 +385,34 @@ fun SettingsScreen(
                 }
             }
 
+            // Sign Out & Danger Zone
+            item {
+                Text(
+                    text = "Account Actions",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = BearishRed
+                )
+            }
+
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    SettingsMenuItem(
+                        icon = Icons.Default.Logout,
+                        title = "Sign Out",
+                        subtitle = "Log out of your account",
+                        onClick = { showSignOutDialog = true }
+                    )
+
+                    SettingsMenuItem(
+                        icon = Icons.Default.DeleteForever,
+                        title = "Delete Account",
+                        subtitle = "Permanently delete your account and data",
+                        onClick = { showDeleteAccountDialog = true }
+                    )
+                }
+            }
+
             // App Version
             item {
                 SWCard {
@@ -403,7 +427,7 @@ fun SettingsScreen(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "my openClaw",
+                                text = "myOpenClaw",
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
@@ -414,7 +438,7 @@ fun SettingsScreen(
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                             )
                             Text(
-                                text = "© 2024 myOpenClaw",
+                                text = "2024 myOpenClaw",
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                             )
@@ -423,7 +447,6 @@ fun SettingsScreen(
                 }
             }
 
-            // Spacer for bottom padding
             item {
                 Spacer(modifier = Modifier.height(60.dp))
             }
@@ -433,7 +456,7 @@ fun SettingsScreen(
     if (showLanguageDialog) {
         com.myopenclaw.ui.components.LanguageSelectionDialog(
             currentLanguage = "English",
-            onLanguageSelected = { /* save preference */ },
+            onLanguageSelected = { },
             onDismiss = { showLanguageDialog = false }
         )
     }

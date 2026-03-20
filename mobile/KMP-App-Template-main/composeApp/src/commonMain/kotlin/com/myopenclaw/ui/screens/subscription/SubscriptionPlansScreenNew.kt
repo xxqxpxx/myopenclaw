@@ -41,20 +41,20 @@ fun SubscriptionPlansScreenNew(
     val features = remember {
         listOf(
             SubscriptionFeature(
-                "Unlimited Chart Analysis",
-                "Snap and analyse any chart instantly with AI-powered market insights and trend detection."
+                "Unlimited AI Coding",
+                "Write, debug, and optimize code in 50+ languages with Claude AI assistance."
             ),
             SubscriptionFeature(
-                "Daily Market Signals",
-                "Wake up to personalized buy, hold, and sell recommendations for all your tracked assets."
+                "Code Execution Sandbox",
+                "Run code in secure cloud sandboxes directly from your conversations."
             ),
             SubscriptionFeature(
-                "AI Trade Coach",
-                "Ask questions about any chart, pattern, or trade decision. Get expert explanations in seconds."
+                "AI Code Reviews",
+                "Get instant code reviews, refactoring suggestions, and best practice guidance."
             ),
             SubscriptionFeature(
-                "Real-Time Alerts",
-                "Get notified the moment key levels break or signals trigger on your watchlist."
+                "File Generation",
+                "Generate code files, CSVs, PDFs, and more — download or share instantly."
             )
         )
     }
