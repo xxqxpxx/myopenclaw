@@ -364,7 +364,7 @@ private fun ToolExecutionCard(
     isStreaming: Boolean
 ) {
     val (icon, label) = when (toolName) {
-        "code_execute" -> Icons.Default.Terminal to "Code Execution"
+        "code_execute" -> Icons.Default.Code to "Code Execution"
         "web_search" -> Icons.Default.Search to "Web Search"
         "file_read" -> Icons.Default.Description to "Reading File"
         "file_write" -> Icons.Default.Save to "Writing File"

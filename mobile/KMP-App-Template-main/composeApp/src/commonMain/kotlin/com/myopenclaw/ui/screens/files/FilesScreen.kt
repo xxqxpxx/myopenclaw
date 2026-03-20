@@ -177,7 +177,7 @@ private fun FileItem(
                 file.filename.endsWith(".py") -> Icons.Default.Code
                 file.filename.endsWith(".csv") -> Icons.Default.TableChart
                 file.filename.endsWith(".pdf") -> Icons.Default.PictureAsPdf
-                file.filename.endsWith(".js") || file.filename.endsWith(".ts") -> Icons.Default.Javascript
+                file.filename.endsWith(".js") || file.filename.endsWith(".ts") -> Icons.Default.Code
                 else -> Icons.Default.InsertDriveFile
             }
 

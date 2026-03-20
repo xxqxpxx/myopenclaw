@@ -71,7 +71,7 @@ fun ExploreScreen(
                 title = "Build a Project",
                 description = "Get step-by-step guidance for building apps",
                 prompt = "Help me build a ",
-                icon = Icons.Default.Rocket,
+                icon = Icons.Default.Build,
                 category = "Build"
             ),
             PromptTemplate(
@@ -106,7 +106,7 @@ fun ExploreScreen(
                 title = "API Design",
                 description = "Design REST or GraphQL APIs",
                 prompt = "Help me design an API for ",
-                icon = Icons.Default.Api,
+                icon = Icons.Default.Cloud,
                 category = "Build"
             )
         )
