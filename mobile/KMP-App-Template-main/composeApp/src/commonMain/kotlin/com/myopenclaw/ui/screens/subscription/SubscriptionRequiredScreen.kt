@@ -155,20 +155,20 @@ fun SubscriptionRequiredScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     FeatureItem(
-                        icon = Icons.Default.Analytics,
-                        text = "AI-powered chart analysis"
+                        icon = Icons.Default.Code,
+                        text = "AI-powered code generation"
                     )
                     FeatureItem(
-                        icon = Icons.Default.TrendingUp,
-                        text = "Real-time trading signals"
+                        icon = Icons.Default.Terminal,
+                        text = "Secure code execution sandbox"
                     )
                     FeatureItem(
                         icon = Icons.Default.Chat,
-                        text = "Unlimited AI trading assistant"
+                        text = "Unlimited AI coding assistant"
                     )
                     FeatureItem(
-                        icon = Icons.Default.Visibility,
-                        text = "Insider & Congress trading data"
+                        icon = Icons.Default.Search,
+                        text = "Web search and file generation"
                     )
                 }
 

@@ -190,22 +190,22 @@ private fun PremiumFeaturesList() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         PremiumFeatureItem(
-            title = "Unlimited Chart Analysis",
-            description = "Snap and analyse any chart instantly with AI-powered market insights and trend detection."
+            title = "Unlimited AI Coding",
+            description = "Write, debug, and optimize code in 50+ languages with Claude AI assistance."
         )
 
         PremiumFeatureItem(
-            title = "Daily Market Signals",
-            description = "Wake up to personalized buy, hold, and sell recommendations for all your tracked assets."
+            title = "Code Execution Sandbox",
+            description = "Run code in secure cloud sandboxes directly from your conversations."
         )
 
         PremiumFeatureItem(
-            title = "AI Trade Coach",
-            description = "Ask questions about any chart, pattern, or trade decision. Get expert explanations in seconds."
+            title = "AI Code Reviews",
+            description = "Get instant code reviews, refactoring suggestions, and best practice guidance."
         )
 
         PremiumFeatureItem(
-            title = "Real-Time Alerts",
+            title = "File Generation",
             description = "Get notified the moment key levels break or signals trigger on your watchlist."
         )
     }

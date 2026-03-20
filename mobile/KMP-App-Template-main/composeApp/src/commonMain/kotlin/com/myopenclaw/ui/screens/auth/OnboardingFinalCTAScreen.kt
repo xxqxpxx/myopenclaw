@@ -4,12 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShowChart
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,8 +18,8 @@ import com.myopenclaw.ui.theme.*
 
 @Composable
 fun OnboardingFinalCTAScreen(
-    onTakePhoto: () -> Unit = {},
-    onGetMarketTrends: () -> Unit = {}
+    onStartCoding: () -> Unit = {},
+    onExploreTemplates: () -> Unit = {}
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -43,9 +42,8 @@ fun OnboardingFinalCTAScreen(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                // Simple icon placeholder - you can replace with actual app icon
                 Icon(
-                    Icons.Default.ShowChart,
+                    Icons.Default.Code,
                     contentDescription = null,
                     tint = Green2,
                     modifier = Modifier.size(48.dp)
@@ -54,9 +52,8 @@ fun OnboardingFinalCTAScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Title
             Text(
-                text = "Let's get your first insight in 30 seconds",
+                text = "You're all set! Start coding with AI",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -66,9 +63,9 @@ fun OnboardingFinalCTAScreen(
 
             Spacer(modifier = Modifier.height(80.dp))
 
-            // Take Photo Button (Primary, Pill-shaped)
+            // Start Coding Button (Primary)
             Button(
-                onClick = onTakePhoto,
+                onClick = onStartCoding,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -78,7 +75,7 @@ fun OnboardingFinalCTAScreen(
                 shape = androidx.compose.foundation.shape.CircleShape
             ) {
                 Text(
-                    "Take a pic of your Trade chart",
+                    "Start a new chat",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
@@ -87,9 +84,9 @@ fun OnboardingFinalCTAScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Get Market Trends Button (Secondary, Pill-shaped)
+            // Explore Templates Button (Secondary)
             Button(
-                onClick = onGetMarketTrends,
+                onClick = onExploreTemplates,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -99,7 +96,7 @@ fun OnboardingFinalCTAScreen(
                 shape = androidx.compose.foundation.shape.CircleShape
             ) {
                 Text(
-                    "Get Market trend analysis",
+                    "Explore prompt templates",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Grey900

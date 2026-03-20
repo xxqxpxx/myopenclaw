@@ -34,31 +34,31 @@ fun OnboardingTestimonialsScreen(
         listOf(
             Testimonial(
                 id = "1",
-                name = "Marcus Chen",
-                title = "Day Trader",
+                name = "Alex Rivera",
+                title = "Full-Stack Developer",
                 rating = 5,
-                review = "I was spending 2+ hours analysing charts daily. Now I snap a photo and get insights in seconds. My win rate jumped 35% in just 3 weeks."
+                review = "I use myOpenClaw on my commute to prototype ideas. Yesterday I built a REST API endpoint and tested it — all from my phone. The sandbox execution is a game-changer."
             ),
             Testimonial(
                 id = "2",
-                name = "Sarah Williams",
-                title = "Swing Trader",
+                name = "Priya Sharma",
+                title = "CS Student",
                 rating = 5,
-                review = "The daily signals are a game-changer. Caught 4 profitable trades this week I would've completely missed."
+                review = "Studying algorithms has never been easier. I paste problems and get step-by-step solutions with working code. My grades went from B to A+ in one semester."
             ),
             Testimonial(
                 id = "3",
-                name = "David Park",
-                title = "Crypto Trader",
+                name = "James Chen",
+                title = "Backend Engineer",
                 rating = 5,
-                review = "I finally understand what I'm looking at. The AI explains patterns in plain English."
+                review = "The code execution sandbox is incredible. I debug production issues right from my phone. It caught a race condition I'd been chasing for days."
             ),
             Testimonial(
                 id = "4",
-                name = "Jennifer Lopez",
-                title = "Forex Trader",
+                name = "Maria Santos",
+                title = "Indie Developer",
                 rating = 5,
-                review = "Best trading tool I've used. The chart analysis alone paid for itself in one trade. My confidence went from 3/10 to 8/10"
+                review = "Built my entire side project's backend with myOpenClaw. The AI writes clean, well-tested code and explains every decision. Worth every credit."
             )
         )
     }
@@ -74,9 +74,8 @@ fun OnboardingTestimonialsScreen(
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Header
             Text(
-                text = "Thanks for trusting my openClaw",
+                text = "Developers love myOpenClaw",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -87,7 +86,7 @@ fun OnboardingTestimonialsScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Join 109k+ traders improving their win rate",
+                text = "Join thousands of developers coding smarter with AI",
                 fontSize = 16.sp,
                 color = Color.White.copy(alpha = 0.7f),
                 textAlign = TextAlign.Start
@@ -95,7 +94,6 @@ fun OnboardingTestimonialsScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Testimonials List
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -109,13 +107,11 @@ fun OnboardingTestimonialsScreen(
                 }
             }
 
-            // Continue Button (Pill-shaped)
             Button(
                 onClick = onContinue,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
-                    .padding(bottom = 0.dp)
                     .testTag("testimonials_continue_button"),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Green2
@@ -148,7 +144,6 @@ fun TestimonialCard(testimonial: Testimonial) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Stars
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
@@ -162,7 +157,6 @@ fun TestimonialCard(testimonial: Testimonial) {
                 }
             }
 
-            // Review Text
             Text(
                 text = testimonial.review,
                 fontSize = 14.sp,
@@ -170,7 +164,6 @@ fun TestimonialCard(testimonial: Testimonial) {
                 lineHeight = 20.sp
             )
 
-            // Author
             Text(
                 text = "${testimonial.name}, ${testimonial.title}",
                 fontSize = 12.sp,

@@ -40,7 +40,7 @@ fun SignUpScreen(
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF0A0F1E) // Dark navy background
+        color = Color(0xFF0A0F1E)
     ) {
         Column(
             modifier = Modifier
@@ -50,7 +50,7 @@ fun SignUpScreen(
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
-            // App Icon (small version at top-left) - Using appstore.png
+            // App Icon
             Image(
                 painter = painterResource(Res.drawable.appstore),
                 contentDescription = "App Logo",
@@ -64,7 +64,7 @@ fun SignUpScreen(
 
             // Title
             Text(
-                text = "my openClaw:",
+                text = "myOpenClaw:",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 32.sp
                 ),
@@ -72,7 +72,7 @@ fun SignUpScreen(
                 color = Color.White
             )
             Text(
-                text = "Instant and Smarter Trade Analysis with AI",
+                text = "Your AI-Powered Coding Assistant",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 32.sp
                 ),
@@ -84,7 +84,7 @@ fun SignUpScreen(
 
             // Description
             Text(
-                text = "Snap any trading chart and get expert market insights, daily buy/hold/sell signals, and AI-powered analysis to make confident trading decisions in seconds.",
+                text = "Write, debug, and ship code faster with Claude AI. Execute code in secure sandboxes, get instant help, and build projects from your phone.",
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White.copy(alpha = 0.7f),
                 lineHeight = 24.sp
@@ -92,36 +92,34 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Rating Badge
+            // Stats badges
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Star and Rating
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        Icons.Default.Star,
+                        Icons.Default.Code,
                         contentDescription = null,
-                        tint = Color(0xFFFFA500), // Orange star
+                        tint = Primary,
                         modifier = Modifier.size(28.dp)
                     )
                     Text(
-                        text = "4.9",
+                        text = "50+",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = Primary
                     )
                     Text(
-                        text = "Average rating",
+                        text = "Languages",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.7f)
                     )
                 }
 
-                // Divider
                 Surface(
                     modifier = Modifier
                         .width(1.dp)
@@ -129,9 +127,8 @@ fun SignUpScreen(
                     color = Color.White.copy(alpha = 0.3f)
                 ) {}
 
-                // Downloads
                 Text(
-                    text = "Over 100k+\nDownloads",
+                    text = "Powered by\nClaude AI",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.7f),
                     lineHeight = 18.sp
@@ -140,7 +137,7 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Sign up with Apple Button - First per Apple HIG, white on dark background
+            // Sign up with Apple Button
             Button(
                 onClick = onNavigateToAppleSignUp,
                 modifier = Modifier
@@ -181,7 +178,6 @@ fun SignUpScreen(
                 shape = RoundedCornerShape(16.dp),
                 contentPadding = PaddingValues(vertical = 18.dp)
             ) {
-                // Google Icon placeholder
                 Surface(
                     modifier = Modifier.size(20.dp),
                     shape = RoundedCornerShape(2.dp),
@@ -190,7 +186,7 @@ fun SignUpScreen(
                     Icon(
                         Icons.Default.AccountCircle,
                         contentDescription = null,
-                        tint = Color(0xFF4285F4) // Google blue
+                        tint = Color(0xFF4285F4)
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
@@ -245,10 +241,7 @@ fun SignUpScreen(
                     color = Color.White.copy(alpha = 0.7f)
                 )
                 TextButton(
-                    onClick = {
-                        // println("SignUpScreen: Navigating to Sign In")
-                        onNavigateToSignIn()
-                    },
+                    onClick = onNavigateToSignIn,
                     modifier = Modifier.testTag("signup_signin_link")
                 ) {
                     Text(

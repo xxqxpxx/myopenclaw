@@ -2,9 +2,10 @@ package com.myopenclaw.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.ShowChart
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,8 +22,9 @@ sealed class BottomNavItem(
     val iconVector: ImageVector
 ) {
     data object Home : BottomNavItem("home", "Home", Icons.Outlined.Home)
-    data object Conversations : BottomNavItem("conversations", "Chats", Icons.Outlined.Chat)
-    data object Profile : BottomNavItem("profile", "Profile", Icons.Default.Person)
+    data object Explore : BottomNavItem("explore", "Explore", Icons.Outlined.Explore)
+    data object Files : BottomNavItem("files", "Files", Icons.Outlined.FolderOpen)
+    data object Settings : BottomNavItem("settings", "Settings", Icons.Outlined.Settings)
 }
 
 @Composable
@@ -32,8 +34,9 @@ fun BottomNavigationBar(
 ) {
     val items = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Conversations,
-        BottomNavItem.Profile
+        BottomNavItem.Explore,
+        BottomNavItem.Files,
+        BottomNavItem.Settings
     )
 
     NavigationBar(
@@ -43,8 +46,9 @@ fun BottomNavigationBar(
         items.forEach { item ->
             val testTag = when(item) {
                 is BottomNavItem.Home -> "bottom_nav_home"
-                is BottomNavItem.Conversations -> "bottom_nav_conversations"
-                is BottomNavItem.Profile -> "bottom_nav_profile"
+                is BottomNavItem.Explore -> "bottom_nav_explore"
+                is BottomNavItem.Files -> "bottom_nav_files"
+                is BottomNavItem.Settings -> "bottom_nav_settings"
             }
             NavigationBarItem(
                 selected = selectedRoute == item.route,

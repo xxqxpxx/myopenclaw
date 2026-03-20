@@ -101,20 +101,20 @@ data class PremiumFeature(
 object SampleUserData {
     val premiumFeatures = listOf(
         PremiumFeature(
-            title = "Unlimited Chart Analysis",
-            description = "Snap and analyse any chart instantly with AI-powered market insights and trend detection."
+            title = "Unlimited AI Coding",
+            description = "Write, debug, and optimize code in 50+ languages with Claude AI assistance."
         ),
         PremiumFeature(
-            title = "Daily Market Signals",
-            description = "Wake up to personalized buy, hold, and sell recommendations for all your tracked assets."
+            title = "Code Execution Sandbox",
+            description = "Run code in secure cloud sandboxes directly from your conversations."
         ),
         PremiumFeature(
-            title = "AI Trade Coach",
-            description = "Ask questions about any chart, pattern, or trade decision. Get expert explanations in seconds."
+            title = "AI Code Reviews",
+            description = "Get instant code reviews, refactoring suggestions, and best practice guidance."
         ),
         PremiumFeature(
-            title = "Real-Time Alerts",
-            description = "Get notified the moment key levels break or signals trigger on your watchlist."
+            title = "File Generation",
+            description = "Generate code files, CSVs, PDFs, and more — download or share instantly."
         )
     )
 

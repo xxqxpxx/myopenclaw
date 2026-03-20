@@ -69,10 +69,10 @@ class SubscriptionViewModel(
                 features = listOf(
                     "All Weekly features",
                     "Advanced AI analysis",
-                    "Chart analysis tool",
-                    "Market impact predictions",
+                    "AI code assistant",
+                    "Code execution sandbox",
                     "Priority support",
-                    "Options flow data"
+                    "File generation"
                 ),
                 isRecommended = true
             ),

@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -17,6 +16,8 @@ import com.myopenclaw.data.local.PreferencesManager
 import com.myopenclaw.ui.screens.auth.*
 import com.myopenclaw.ui.screens.chat.ChatScreen
 import com.myopenclaw.ui.screens.chat.ConversationListScreen
+import com.myopenclaw.ui.screens.explore.ExploreScreen
+import com.myopenclaw.ui.screens.files.FilesScreen
 import com.myopenclaw.ui.screens.home.HomeScreen
 import com.myopenclaw.ui.screens.profile.ProfileScreen
 import com.myopenclaw.ui.screens.subscription.SubscriptionPlansScreenRevenueCat
@@ -51,15 +52,19 @@ sealed class Screen(val route: String) {
     data object Paywall : Screen("paywall")
     data object FinalCTA : Screen("final_cta")
 
-    // Main App
+    // Main App (Bottom Nav Tabs)
     data object Home : Screen("home")
+    data object Explore : Screen("explore")
+    data object Files : Screen("files")
+    data object Settings : Screen("settings")
+
+    // Non-tab screens
     data object Conversations : Screen("conversations")
     data object Chat : Screen("chat/{conversationId}") {
         fun createRoute(conversationId: String?) =
             if (conversationId != null) "chat/$conversationId" else "chat/new"
     }
     data object Profile : Screen("profile")
-    data object Settings : Screen("settings")
 
     // Subscription
     data object Subscription : Screen("subscription")
@@ -76,8 +81,9 @@ fun AppNavigation(
 
     val screensWithBottomNav = listOf(
         Screen.Home.route,
-        Screen.Conversations.route,
-        Screen.Profile.route
+        Screen.Explore.route,
+        Screen.Files.route,
+        Screen.Settings.route
     )
 
     val showBottomBar = currentRoute in screensWithBottomNav
@@ -287,15 +293,14 @@ fun AppNavigation(
 
             composable(Screen.FinalCTA.route) {
                 val onboardingViewModel: OnboardingViewModel = koinInject()
-                val sessionManager: com.myopenclaw.data.session.SessionManager = koinInject()
                 OnboardingFinalCTAScreen(
-                    onTakePhoto = {
+                    onStartCoding = {
                         onboardingViewModel.completeOnboarding()
                         navController.navigate(Screen.Home.route) {
                             popUpTo(0) { inclusive = true }
                         }
                     },
-                    onGetMarketTrends = {
+                    onExploreTemplates = {
                         onboardingViewModel.completeOnboarding()
                         navController.navigate(Screen.Home.route) {
                             popUpTo(0) { inclusive = true }
@@ -304,18 +309,51 @@ fun AppNavigation(
                 )
             }
 
-            // ── Main App ──────────────────────────────────────
+            // ── Main App (Bottom Nav Tabs) ──────────────────────
 
             composable(Screen.Home.route) {
                 HomeScreen(
-                    onNavigateToChat = {
-                        navController.navigate(Screen.Chat.createRoute(null))
+                    onNavigateToChat = { conversationId ->
+                        navController.navigate(Screen.Chat.createRoute(conversationId))
                     },
-                    onNavigateToConversations = {
-                        navController.navigate(Screen.Conversations.route)
+                    onNavigateToNewChat = {
+                        navController.navigate(Screen.Chat.createRoute(null))
                     }
                 )
             }
+
+            composable(Screen.Explore.route) {
+                ExploreScreen(
+                    onStartChatWithPrompt = { prompt ->
+                        // Start a new chat with the prompt pre-filled
+                        navController.navigate(Screen.Chat.createRoute(null))
+                    }
+                )
+            }
+
+            composable(Screen.Files.route) {
+                FilesScreen()
+            }
+
+            composable(Screen.Settings.route) {
+                SettingsScreen(
+                    onNavigateToSubscription = {
+                        navController.navigate(Screen.Subscription.route)
+                    },
+                    onSignOut = {
+                        navController.navigate(Screen.SignUp.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    },
+                    onDeleteAccount = {
+                        navController.navigate(Screen.SignUp.route) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                )
+            }
+
+            // ── Non-tab screens ──────────────────────────────────
 
             composable(Screen.Conversations.route) {
                 ConversationListScreen(
@@ -350,12 +388,6 @@ fun AppNavigation(
                             popUpTo(0) { inclusive = true }
                         }
                     }
-                )
-            }
-
-            composable(Screen.Settings.route) {
-                SettingsScreen(
-                    onNavigateBack = { navController.popBackStack() }
                 )
             }
 

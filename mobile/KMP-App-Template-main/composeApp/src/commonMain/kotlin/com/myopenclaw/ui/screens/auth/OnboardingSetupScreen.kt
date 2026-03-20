@@ -33,27 +33,25 @@ fun OnboardingSetupScreen(
     var tasks by remember {
         mutableStateOf(
             listOf(
-                SetupTask(0, "Preparing notes", false),
-                SetupTask(1, "Preparing Flashcards", false),
-                SetupTask(2, "Preparing Quiz templates", false),
-                SetupTask(3, "Preparing Chat assistants", false)
+                SetupTask(0, "Configuring AI models", false),
+                SetupTask(1, "Setting up code sandbox", false),
+                SetupTask(2, "Preparing tool integrations", false),
+                SetupTask(3, "Initializing your workspace", false)
             )
         )
     }
 
     var currentProgress by remember { mutableFloatStateOf(0f) }
 
-    // Simulate setup progress
     LaunchedEffect(Unit) {
         tasks.forEachIndexed { index, _ ->
-            delay(800) // 0.8 seconds per task
+            delay(800)
             tasks = tasks.mapIndexed { i, task ->
                 if (i == index) task.copy(isCompleted = true) else task
             }
             currentProgress = (index + 1).toFloat() / tasks.size
         }
 
-        // Wait a bit before completing
         delay(500)
         onSetupComplete()
     }
@@ -70,7 +68,6 @@ fun OnboardingSetupScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Back Button
             Surface(
                 onClick = onNavigateBack,
                 modifier = Modifier
@@ -94,9 +91,8 @@ fun OnboardingSetupScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Title
             Text(
-                text = "Setting up your Trading experience, $userName...",
+                text = "Setting up your AI workspace, $userName...",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -106,7 +102,6 @@ fun OnboardingSetupScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Progress Bar with Percentage
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -133,7 +128,6 @@ fun OnboardingSetupScreen(
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Tasks List Card
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 color = Dark6,
@@ -153,13 +147,11 @@ fun OnboardingSetupScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Continue Button (disabled during setup, pill-shaped)
             Button(
-                onClick = { /* Will be called automatically */ },
+                onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(bottom = 0.dp),
+                    .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Green2,
                     disabledContainerColor = Green2.copy(alpha = 0.5f)
@@ -195,7 +187,6 @@ fun SetupTaskRow(task: SetupTask) {
         )
 
         if (task.isCompleted) {
-            // Green checkmark in circle
             Surface(
                 modifier = Modifier.size(24.dp),
                 color = Green2,
@@ -214,7 +205,6 @@ fun SetupTaskRow(task: SetupTask) {
                 }
             }
         } else {
-            // Empty circle outline
             Surface(
                 modifier = Modifier.size(24.dp),
                 color = Color.Transparent,

@@ -28,9 +28,9 @@ val Error = Color(0xFFFF5252)
 val Warning = Color(0xFFFFB020) // Updated to match Figma design
 val Info = Color(0xFF2196F3)
 
-// Trading-specific Colors
-val BullishGreen = Color(0xFF00E676)
-val BearishRed = Color(0xFFFF5252)
+// Semantic Accent Colors
+val BullishGreen = Color(0xFF00E676) // Success accent
+val BearishRed = Color(0xFFFF5252) // Error/danger accent
 val NeutralGray = Color(0xFF9E9E9E)
 
 // Text Colors

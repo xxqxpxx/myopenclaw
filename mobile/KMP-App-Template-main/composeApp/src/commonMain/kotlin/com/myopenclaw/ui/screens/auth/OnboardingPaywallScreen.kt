@@ -188,7 +188,7 @@ fun OnboardingPaywallScreen(
                         icon = Icons.Default.Person,
                         iconColor = Primary,
                         title = "Right now",
-                        description = "Get your first chart analysis in 30 seconds. Browse today's buy/hold/sell signals. Ask your AI coach any trading question.",
+                        description = "Start coding with AI in seconds. Execute code in secure sandboxes. Get instant debugging help and code reviews.",
                         isActive = true
                     )
 

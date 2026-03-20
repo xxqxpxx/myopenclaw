@@ -76,7 +76,7 @@ fun OnboardingScreen(
 
             // Main Title
             Text(
-                text = "my openClaw:\nInstant and Smarter Trade Analysis with AI",
+                text = "myOpenClaw:\nYour AI-Powered Coding Assistant",
                 style = TextStyle(
                     fontSize = responsiveDimensions.titleFontSize,
                     lineHeight = responsiveDimensions.titleLineHeight,
@@ -92,7 +92,7 @@ fun OnboardingScreen(
 
             // Description
             Text(
-                text = "Snap any trading chart and get expert market insights, daily buy/hold/sell signals, and AI-powered analysis to make confident trading decisions in seconds.",
+                text = "Write, debug, and ship code faster with Claude AI. Execute code in secure sandboxes, get instant help, and build projects from your phone.",
                 style = TextStyle(
                     fontSize = responsiveDimensions.descriptionFontSize,
                     lineHeight = responsiveDimensions.descriptionLineHeight,
