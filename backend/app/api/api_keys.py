@@ -114,7 +114,7 @@ async def _validate_key(provider: str, api_key: str) -> bool:
                         "content-type": "application/json",
                     },
                     json={
-                        "model": "claude-haiku-4-5-20250315",
+                        "model": "claude-3-5-haiku-20241022",
                         "max_tokens": 1,
                         "messages": [{"role": "user", "content": "hi"}],
                     },
