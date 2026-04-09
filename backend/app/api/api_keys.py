@@ -106,6 +106,9 @@ async def _validate_key(provider: str, api_key: str) -> bool:
     try:
         async with httpx.AsyncClient(timeout=10) as client:
             if provider == "anthropic":
+                # Use a minimal request; accept 200 (success) or 400 (bad request
+                # but key is valid — e.g. model not available on their plan).
+                # Only reject on 401/403 (auth failure).
                 resp = await client.post(
                     "https://api.anthropic.com/v1/messages",
                     headers={
@@ -119,28 +122,29 @@ async def _validate_key(provider: str, api_key: str) -> bool:
                         "messages": [{"role": "user", "content": "hi"}],
                     },
                 )
-                return resp.status_code == 200
+                # 401/403 = bad key, anything else means key is valid
+                return resp.status_code not in (401, 403)
 
             elif provider == "openai":
                 resp = await client.get(
                     "https://api.openai.com/v1/models",
                     headers={"Authorization": f"Bearer {api_key}"},
                 )
-                return resp.status_code == 200
+                return resp.status_code not in (401, 403)
 
             elif provider == "google":
                 resp = await client.get(
                     "https://generativelanguage.googleapis.com/v1/models",
                     params={"key": api_key},
                 )
-                return resp.status_code == 200
+                return resp.status_code not in (401, 403)
 
             elif provider == "deepseek":
                 resp = await client.get(
                     "https://api.deepseek.com/v1/models",
                     headers={"Authorization": f"Bearer {api_key}"},
                 )
-                return resp.status_code == 200
+                return resp.status_code not in (401, 403)
 
     except httpx.HTTPError:
         return False
