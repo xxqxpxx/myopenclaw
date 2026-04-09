@@ -20,7 +20,7 @@ TIERS: dict[str, TierConfig] = {
     "free": TierConfig(
         name="Free",
         monthly_credits=100,
-        allowed_models=["claude-3-5-haiku-20241022"],
+        allowed_models=["claude-3-haiku-20240307"],
         max_storage_gb=1,
         can_execute_code=False,
         can_create_files=False,
@@ -29,7 +29,7 @@ TIERS: dict[str, TierConfig] = {
     "starter": TierConfig(
         name="Starter",
         monthly_credits=2000,
-        allowed_models=["claude-3-5-haiku-20241022", "claude-sonnet-4-20250514"],
+        allowed_models=["claude-3-haiku-20240307", "claude-sonnet-4-20250514"],
         max_storage_gb=5,
         can_execute_code=True,
         can_create_files=True,
@@ -38,7 +38,7 @@ TIERS: dict[str, TierConfig] = {
     "pro": TierConfig(
         name="Pro",
         monthly_credits=8000,
-        allowed_models=["claude-3-5-haiku-20241022", "claude-sonnet-4-20250514"],
+        allowed_models=["claude-3-haiku-20240307", "claude-sonnet-4-20250514"],
         max_storage_gb=20,
         can_execute_code=True,
         can_create_files=True,
@@ -48,7 +48,7 @@ TIERS: dict[str, TierConfig] = {
         name="Power",
         monthly_credits=30000,
         allowed_models=[
-            "claude-3-5-haiku-20241022",
+            "claude-3-haiku-20240307",
             "claude-sonnet-4-20250514",
             "claude-opus-4-20250514",
         ],
@@ -61,7 +61,7 @@ TIERS: dict[str, TierConfig] = {
         name="BYOK",
         monthly_credits=999999,  # effectively unlimited
         allowed_models=[
-            "claude-3-5-haiku-20241022",
+            "claude-3-haiku-20240307",
             "claude-sonnet-4-20250514",
             "claude-opus-4-20250514",
         ],

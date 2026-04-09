@@ -25,17 +25,17 @@ class TestModelRouting:
 
 class TestCreditCalculation:
     def test_haiku_cost(self):
-        cost = calculate_cost("claude-3-5-haiku-20241022", 1000, 500)
+        cost = calculate_cost("claude-3-haiku-20240307", 1000, 500)
         assert cost > 0
         assert cost < 0.01
 
     def test_opus_costs_more(self):
-        haiku = calculate_cost("claude-3-5-haiku-20241022", 1000, 500)
+        haiku = calculate_cost("claude-3-haiku-20240307", 1000, 500)
         opus = calculate_cost("claude-opus-4-20250514", 1000, 500)
         assert opus > haiku
 
     def test_estimate_credits_minimum_one(self):
-        credits = estimate_credits("claude-3-5-haiku-20241022", 1, 1)
+        credits = estimate_credits("claude-3-haiku-20240307", 1, 1)
         assert credits >= 1
 
 
@@ -44,12 +44,12 @@ class TestTiers:
         assert set(TIERS.keys()) == {"free", "starter", "pro", "power", "byok"}
 
     def test_free_tier_haiku_only(self):
-        assert is_model_allowed("free", "claude-3-5-haiku-20241022")
+        assert is_model_allowed("free", "claude-3-haiku-20240307")
         assert not is_model_allowed("free", "claude-sonnet-4-20250514")
         assert not is_model_allowed("free", "claude-opus-4-20250514")
 
     def test_power_tier_all_models(self):
-        assert is_model_allowed("power", "claude-3-5-haiku-20241022")
+        assert is_model_allowed("power", "claude-3-haiku-20240307")
         assert is_model_allowed("power", "claude-sonnet-4-20250514")
         assert is_model_allowed("power", "claude-opus-4-20250514")
 
