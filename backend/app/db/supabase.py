@@ -366,7 +366,7 @@ async def delete_api_key(user_id: str, provider: str) -> bool:
 async def update_user_preferences(user_id: str, **fields) -> dict | None:
     sb = get_supabase()
     result = (
-        sb.table("profiles")
+        sb.table("users")
         .update(fields)
         .eq("id", user_id)
         .execute()

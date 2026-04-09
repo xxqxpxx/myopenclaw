@@ -19,8 +19,8 @@ CREATE POLICY "users own their keys" ON api_keys
     FOR ALL USING (auth.uid() = user_id);
 
 -- User preferences (model selection, etc.)
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS preferred_model TEXT DEFAULT 'auto';
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS preferred_provider TEXT DEFAULT 'anthropic';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_model TEXT DEFAULT 'auto';
+ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_provider TEXT DEFAULT 'anthropic';
 
 -- Index for fast lookup during chat
 CREATE INDEX IF NOT EXISTS idx_api_keys_user_provider ON api_keys(user_id, provider);

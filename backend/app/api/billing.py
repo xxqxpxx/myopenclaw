@@ -91,8 +91,11 @@ async def create_checkout(
     if not settings.stripe_secret_key:
         raise HTTPException(status_code=503, detail="Stripe not configured")
 
-    if body.tier not in TIER_PRICES or not TIER_PRICES.get(body.tier):
-        raise HTTPException(status_code=400, detail=f"Invalid tier: {body.tier}")
+    valid_tiers = [t for t, price in TIER_PRICES.items() if price]
+    if body.tier not in TIER_PRICES:
+        raise HTTPException(status_code=400, detail=f"Invalid tier: {body.tier}. Valid tiers: {', '.join(valid_tiers)}")
+    if not TIER_PRICES.get(body.tier):
+        raise HTTPException(status_code=503, detail=f"Tier '{body.tier}' is not yet available for purchase. Stripe price not configured.")
 
     # Get or create Stripe customer
     sub = await db.get_subscription(user.user_id)
