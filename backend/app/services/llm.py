@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 # Cost per million tokens (USD) — used for usage tracking
 MODEL_COSTS = {
     "claude-haiku-4-5-20250315": {"input": 1.00, "output": 5.00},
+    "claude-3-haiku-20240307": {"input": 0.25, "output": 1.25},
     "claude-sonnet-4-20250514": {"input": 3.00, "output": 15.00},
     "claude-opus-4-20250514": {"input": 15.00, "output": 75.00},
 }

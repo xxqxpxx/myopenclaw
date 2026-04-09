@@ -95,9 +95,16 @@ app.include_router(google_oauth_router, prefix="/api/v1")  # /api/v1/auth/google
 async def global_exception_handler(request: Request, exc: Exception):
     """Catch-all for unhandled errors — return clean JSON, log details."""
     logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    origin = request.headers.get("origin", "")
+    allowed_origins = settings.get_cors_origins()
+    headers: dict[str, str] = {}
+    if origin and ("*" in allowed_origins or origin in allowed_origins):
+        headers["access-control-allow-origin"] = origin if "*" not in allowed_origins else "*"
+        headers["access-control-allow-credentials"] = "true"
     return JSONResponse(
         status_code=500,
         content={"detail": "Internal server error"},
+        headers=headers,
     )
 
 

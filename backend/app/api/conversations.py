@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 
@@ -19,6 +21,8 @@ from app.services.bridge import stream_agent_response
 from app.services.byok import resolve_byok_key
 from app.services.tiers import is_model_allowed
 from app.services.memory import build_memory_context
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
@@ -133,8 +137,12 @@ async def chat_stream(
     model = route_model(body.content, body.model)
 
     # 5a. Check tier allows this model
-    sub = await db.get_subscription(user.user_id)
-    tier_name = sub["tier"] if sub else "free"
+    try:
+        sub = await db.get_subscription(user.user_id)
+        tier_name = sub["tier"] if sub else "free"
+    except Exception:
+        logger.warning("Failed to fetch subscription for user %s, defaulting to free", user.user_id)
+        tier_name = "free"
     if not is_model_allowed(tier_name, model):
         raise HTTPException(
             status_code=403,
@@ -142,13 +150,20 @@ async def chat_stream(
         )
 
     # 5b. Resolve BYOK key if user has one stored
-    byok_api_key = await resolve_byok_key(user.user_id, provider="anthropic")
+    try:
+        byok_api_key = await resolve_byok_key(user.user_id, provider="anthropic")
+    except Exception:
+        logger.warning("Failed to resolve BYOK key for user %s", user.user_id)
+        byok_api_key = None
 
     # 5c. Build system prompt with user memory
-    memory_ctx = await build_memory_context(user.user_id)
     system_prompt = "You are a helpful AI assistant powered by myOpenClaw."
-    if memory_ctx:
-        system_prompt += memory_ctx
+    try:
+        memory_ctx = await build_memory_context(user.user_id)
+        if memory_ctx:
+            system_prompt += memory_ctx
+    except Exception:
+        logger.warning("Failed to build memory context for user %s", user.user_id)
 
     # 6. Stream response
     async def event_generator():
